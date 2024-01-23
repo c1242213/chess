@@ -13,13 +13,13 @@ public class Queen {
     }
 
 
-    public Collection<ChessMove> B_Moves(ChessBoard board, ChessPosition myPosition) {
+    public Collection<ChessMove> Q_Moves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> return_list = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
 
             ChessPosition newPosition = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i);
             ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i < 8 || myPosition.getColumn() + i < 7) {
+            if (myPosition.getRow() + i > 9 || myPosition.getColumn() + i > 9) {
                 break;
             } else {
                 if (newPiece == null) {
@@ -37,11 +37,11 @@ public class Queen {
 
         }
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
 
             ChessPosition newPosition = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i);
             ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i > -1 || myPosition.getColumn() + i < 8) {
+            if (myPosition.getRow() - i < 0 || myPosition.getColumn() + i > 9) {
                 break;
             } else {
                 if (newPiece == null) {
@@ -58,11 +58,11 @@ public class Queen {
             }
 
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
 
             ChessPosition newPosition = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i);
             ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i < 8 || myPosition.getColumn() + i > -1) {
+            if (myPosition.getRow() + i > 9 || myPosition.getColumn() - i < 0) {
                 break;
             } else {
                 if (newPiece == null) {
@@ -83,7 +83,7 @@ public class Queen {
 
             ChessPosition newPosition = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i);
             ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i > -1 || myPosition.getColumn() + i > -1) {
+            if (myPosition.getRow() - i < -1 || myPosition.getColumn() - i < 0) {
                 break;
             } else {
                 if (newPiece == null) {
@@ -100,11 +100,11 @@ public class Queen {
             }
 
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
 
             ChessPosition newPosition = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn());
             ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i > -1 || myPosition.getColumn() + i < 8) {
+            if (myPosition.getRow() - i < 0) {
                 break;
             } else {
                 if (newPiece == null) {
@@ -121,11 +121,11 @@ public class Queen {
             }
 
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
 
             ChessPosition newPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn() - i);
             ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i > -1 || myPosition.getColumn() + i < 8) {
+            if (myPosition.getColumn() - i < 0) {
                 break;
             } else {
                 if (newPiece == null) {
@@ -142,11 +142,11 @@ public class Queen {
             }
 
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
 
             ChessPosition newPosition = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn());
             ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i > -1 || myPosition.getColumn() + i < 8) {
+            if (myPosition.getRow() + i > 9) {
                 break;
             } else {
                 if (newPiece == null) {
@@ -163,11 +163,11 @@ public class Queen {
             }
 
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
 
             ChessPosition newPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn() + i);
             ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i > -1 || myPosition.getColumn() + i < 8) {
+            if (myPosition.getColumn() + i > 9) {
                 break;
             } else {
                 if (newPiece == null) {

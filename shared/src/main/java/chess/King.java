@@ -16,7 +16,10 @@ public class King {
     public Collection<ChessMove> K_Moves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> return_list = new ArrayList<>();
         int[][] moves = {
-                {1,0}, {-1,0}, {0,1}, {0,-1}, {1,1}, {-1,-1}, {-1,1}, {1,-1}
+                {1,0}, {-1,0},
+                {0,1}, {0,-1},
+                {1,1}, {-1,-1},
+                {-1,1}, {1,-1}
         };
 
         for (int i = 0; i < 8; i++){
@@ -25,7 +28,7 @@ public class King {
             ChessPosition newPosition = new ChessPosition(newRow, newCol);
             ChessPiece newPiece = board.getPiece(newPosition);
 
-            if(newRow < 8 && newRow > -1 && newCol < 8 && newCol > -1) {
+            if(newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
                 if(newPiece == null || newPiece.getTeamColor() != Color){
                     return_list.add(new ChessMove(myPosition, newPosition, null));
                 }

@@ -54,7 +54,7 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> all_moves = null;
-        switch (this.getPieceType()) {
+        switch (this.type) {
             case BISHOP:
                 Bishop bishop = new Bishop(this.pieceColor);
                 all_moves = bishop.B_Moves(board, myPosition);
@@ -68,8 +68,18 @@ public class ChessPiece {
                 Knight knight = new Knight(this.pieceColor);
                 all_moves = knight.KN_Moves(board, myPosition);
                 break;
-
-
+            case QUEEN:
+                Queen queen = new Queen(this.pieceColor);
+                all_moves = queen.Q_Moves(board,myPosition);
+                break;
+            case ROOK:
+                Rook rook = new Rook(this.pieceColor);
+                all_moves = rook.R_Moves(board,myPosition);
+                break;
+//            case PAWN:
+//                Pawn pawn = new Pawn(this.pieceColor);
+//                all_moves = pawn.P_Moves(board,myPosition);
+//                break;
         }
         return all_moves;
     }
