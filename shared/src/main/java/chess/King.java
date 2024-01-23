@@ -18,10 +18,21 @@ public class King {
         int[][] moves = {
                 {1,0}, {-1,0}, {0,1}, {0,-1}, {1,1}, {-1,-1}, {-1,1}, {1,-1}
         };
+
         for (int i = 0; i < 8; i++){
-            int newRow = moves[i][0];
-            int newCol = moves[i][1];
-            ChessPosition newPosition = new ChessPosition(myPosition.getRow() + newRow, myPosition.getColumn()+ newCol)
+            int newRow = myPosition.getRow() + moves[i][0];
+            int newCol = myPosition.getColumn() + moves[i][1];
+            ChessPosition newPosition = new ChessPosition(newRow, newCol);
+            ChessPiece newPiece = board.getPiece(newPosition);
+
+            if(newRow < 8 && newRow > -1 && newCol < 8 && newCol > -1) {
+                if(newPiece == null || newPiece.getTeamColor() != Color){
+                    return_list.add(new ChessMove(myPosition, newPosition, null));
+                }
+
+            }
         }
+        return return_list;
+
     }
 }
