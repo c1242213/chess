@@ -30,9 +30,10 @@ public class Rook {
                 }
             }
         }
+
         for (int i = 1; i < 8; i++) {
-            if (myPosition.getColumn() + i <= 8) {
-                ChessPosition newPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn() + i);
+            if (myPosition.getRow() - i >= 1) {
+                ChessPosition newPosition = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn());
                 ChessPiece newPiece = board.getPiece(newPosition);
 
                 if (newPiece == null) {
@@ -45,9 +46,10 @@ public class Rook {
                 }
             }
         }
+
         for (int i = 1; i < 8; i++) {
-            if (myPosition.getRow() - i >= 1) {
-                ChessPosition newPosition = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn());
+            if (myPosition.getColumn() + i <= 8) {
+                ChessPosition newPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn() + i);
                 ChessPiece newPiece = board.getPiece(newPosition);
 
                 if (newPiece == null) {

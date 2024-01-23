@@ -76,10 +76,10 @@ public class ChessPiece {
                 Rook rook = new Rook(this.pieceColor);
                 all_moves = rook.R_Moves(board,myPosition);
                 break;
-//            case PAWN:
-//                Pawn pawn = new Pawn(this.pieceColor);
-//                all_moves = pawn.P_Moves(board,myPosition);
-//                break;
+            case PAWN:
+                Pawn pawn = new Pawn(this.pieceColor);
+                all_moves = pawn.P_Moves(board,myPosition);
+                break;
         }
         return all_moves;
     }

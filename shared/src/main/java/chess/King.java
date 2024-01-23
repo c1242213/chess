@@ -36,6 +36,5 @@ public class King {
             }
         }
         return return_list;
-
     }
 }
