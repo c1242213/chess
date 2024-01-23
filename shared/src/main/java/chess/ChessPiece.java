@@ -60,10 +60,14 @@ public class ChessPiece {
                 all_moves = bishop.B_Moves(board, myPosition);
                 break;
             //Bishop.B_moves
-            case
-
-
-
+            case KING:
+                King king = new King(this.pieceColor);
+                all_moves = king.K_Moves(board, myPosition);
+                break;
+            case KNIGHT:
+                Knight knight = new Knight(this.pieceColor);
+                all_moves = knight.KN_Moves(board, myPosition);
+                break;
 
 
         }
