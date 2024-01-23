@@ -13,94 +13,29 @@ public class Knight {
     }
 
 
-    public Collection<ChessMove> KN_Moves(ChessBoard board, ChessPosition myPosition) {
+    public Collection<ChessMove> N_Moves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> return_list = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
+        int[][] moves = {
+                {2, 1}, {1, 2},
+                {-1, 2}, {-2, 1},
+                {-2, -1}, {-1, -2},
+                {1, -2}, {2, -1}
+        };
 
-            ChessPosition newPosition = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i);
-            ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i < 8 || myPosition.getColumn() + i < 7) {
-                break;
-            } else {
-                if (newPiece == null) {
+        for (int i = 0; i < 8; i++){
+            int newRow = myPosition.getRow() + moves[i][0];
+            int newCol = myPosition.getColumn() + moves[i][1];
+            ChessPosition newPosition = new ChessPosition(newRow, newCol);
+
+            if(newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+                ChessPiece newPiece = board.getPiece(newPosition);
+                if(newPiece == null || newPiece.getTeamColor() != Color){
                     return_list.add(new ChessMove(myPosition, newPosition, null));
                 }
 
-                if (newPiece != null) {
-                    if (newPiece.getTeamColor() != Color) {
-                        return_list.add(new ChessMove(myPosition, newPosition, null));
-                    }
-                    break;
-
-                }
             }
-
         }
-
-        for (int i = 0; i < 8; i++) {
-
-            ChessPosition newPosition = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i);
-            ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i > -1 || myPosition.getColumn() + i < 8) {
-                break;
-            } else {
-                if (newPiece == null) {
-                    return_list.add(new ChessMove(myPosition, newPosition, null));
-                }
-
-                if (newPiece != null) {
-                    if (newPiece.getTeamColor() != Color) {
-                        return_list.add(new ChessMove(myPosition, newPosition, null));
-                    }
-                    break;
-
-                }
-            }
-
-        }
-        for (int i = 0; i < 8; i++) {
-
-            ChessPosition newPosition = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i);
-            ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i < 8 || myPosition.getColumn() + i > -1) {
-                break;
-            } else {
-                if (newPiece == null) {
-                    return_list.add(new ChessMove(myPosition, newPosition, null));
-                }
-
-                if (newPiece != null) {
-                    if (newPiece.getTeamColor() != Color) {
-                        return_list.add(new ChessMove(myPosition, newPosition, null));
-                    }
-                    break;
-
-                }
-            }
-
-        }
-        for (int i = 0; i < 8; i++) {
-
-            ChessPosition newPosition = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i);
-            ChessPiece newPiece = board.getPiece(newPosition);
-            if (myPosition.getRow() + i > -1 || myPosition.getColumn() + i > -1) {
-                break;
-            } else {
-                if (newPiece == null) {
-                    return_list.add(new ChessMove(myPosition, newPosition, null));
-                }
-
-                if (newPiece != null) {
-                    if (newPiece.getTeamColor() != Color) {
-                        return_list.add(new ChessMove(myPosition, newPosition, null));
-                    }
-                    break;
-
-                }
-            }
-
-        }
-
         return return_list;
+
     }
 }

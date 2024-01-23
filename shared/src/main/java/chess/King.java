@@ -26,9 +26,9 @@ public class King {
             int newRow = myPosition.getRow() + moves[i][0];
             int newCol = myPosition.getColumn() + moves[i][1];
             ChessPosition newPosition = new ChessPosition(newRow, newCol);
-            ChessPiece newPiece = board.getPiece(newPosition);
 
             if(newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+                ChessPiece newPiece = board.getPiece(newPosition);
                 if(newPiece == null || newPiece.getTeamColor() != Color){
                     return_list.add(new ChessMove(myPosition, newPosition, null));
                 }

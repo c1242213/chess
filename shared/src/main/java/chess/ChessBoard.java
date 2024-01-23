@@ -43,6 +43,7 @@ public class ChessBoard {
      */
     public void resetBoard() {
         ChessPiece[][] new_squares = new ChessPiece[8][8];
+        this.squares = new_squares;
         new_squares[0][0] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
         new_squares[0][1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
         new_squares[0][2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);

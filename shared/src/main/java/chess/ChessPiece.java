@@ -66,7 +66,7 @@ public class ChessPiece {
                 break;
             case KNIGHT:
                 Knight knight = new Knight(this.pieceColor);
-                all_moves = knight.KN_Moves(board, myPosition);
+                all_moves = knight.N_Moves(board, myPosition);
                 break;
             case QUEEN:
                 Queen queen = new Queen(this.pieceColor);
