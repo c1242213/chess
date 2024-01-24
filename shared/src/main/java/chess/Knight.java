@@ -22,17 +22,16 @@ public class Knight {
                 {1, -2}, {2, -1}
         };
 
-        for (int i = 0; i < 8; i++){
+        for (int i = 0; i < moves.length; i++) {
             int newRow = myPosition.getRow() + moves[i][0];
             int newCol = myPosition.getColumn() + moves[i][1];
-            ChessPosition newPosition = new ChessPosition(newRow, newCol);
 
-            if(newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+            if (newRow >= 1 && newRow <= 8 && newCol >= 1 && newCol <= 8) {
+                ChessPosition newPosition = new ChessPosition(newRow, newCol);
                 ChessPiece newPiece = board.getPiece(newPosition);
-                if(newPiece == null || newPiece.getTeamColor() != Color){
+                if (newPiece == null || newPiece.getTeamColor() != Color) {
                     return_list.add(new ChessMove(myPosition, newPosition, null));
                 }
-
             }
         }
         return return_list;

@@ -74,7 +74,7 @@ public class ChessPiece {
                 break;
             case ROOK:
                 Rook rook = new Rook(this.pieceColor);
-                all_moves = rook.R_Moves(board,myPosition);
+                all_moves = rook.R_Moves(board,myPosition,this);
                 break;
             case PAWN:
                 Pawn pawn = new Pawn(this.pieceColor);
@@ -108,7 +108,7 @@ public class ChessPiece {
         for (int i = 1; i < 8; i++) {
             int newRow = myPosition.getRow() + deltaRow*i;
             int newCol = myPosition.getColumn() + deltaCol*i;
-            if (newRow >= 1 || newCol >= 1 || newRow <= 8 || newCol <= 8) {
+            if (newRow >= 1 && newCol >= 1 && newRow <= 8 && newCol <= 8) {
                 ChessPosition newPosition = new ChessPosition(newRow, newCol);
                 ChessPiece newPiece = board.getPiece(newPosition);
 
