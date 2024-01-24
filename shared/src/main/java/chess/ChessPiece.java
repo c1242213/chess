@@ -103,4 +103,24 @@ public class ChessPiece {
                 ", type=" + type +
                 '}';
     }
+    public void moveInDirection(ChessPosition myPosition, ChessBoard board, Collection<ChessMove> returnList, int deltaRow, int deltaCol){
+
+        for (int i = 1; i < 8; i++) {
+            int newRow = myPosition.getRow() + deltaRow*i;
+            int newCol = myPosition.getColumn() + deltaCol*i;
+            if (newRow >= 1 || newCol >= 1 || newRow <= 8 || newCol <= 8) {
+                ChessPosition newPosition = new ChessPosition(newRow, newCol);
+                ChessPiece newPiece = board.getPiece(newPosition);
+
+                if (newPiece == null) {
+                    returnList.add(new ChessMove(myPosition, newPosition, null));
+                } else {
+                    if (newPiece.getTeamColor() != this.pieceColor) {
+                        returnList.add(new ChessMove(myPosition, newPosition, null));
+                    }
+                    break;
+                }
+            }
+        }
+    }
 }
