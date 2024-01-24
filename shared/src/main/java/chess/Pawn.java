@@ -1,8 +1,6 @@
 package chess;
-
 import java.util.ArrayList;
 import java.util.Collection;
-
 public class Pawn {
 
     private final ChessGame.TeamColor Color;
@@ -11,57 +9,73 @@ public class Pawn {
         this.Color = Color;
     }
 
-    public Collection<ChessMove> P_Moves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> return_list = new ArrayList<>();
-        int direction;
-        int promotionRow;
-        if (this.Color == ChessGame.TeamColor.WHITE) { //two direction a pawn can go from either team
-            direction = -1;
-            promotionRow = 0;
-        } else {
-            direction = 1;
-            promotionRow = 7;
-        }
-        // move forward one square
-        int newRow = myPosition.getRow() + direction;
-        int newCol = myPosition.getColumn();
-        if (newRow >= 0 && newRow < 8) {
-            ChessPosition newPosition = new ChessPosition(newRow, newCol);
-            ChessPiece newPiece = board.getPiece(newPosition);
-            if (newRow == promotionRow) {
-                return_list.add(new ChessMove(myPosition, newPosition, ChessPiece.PieceType.QUEEN));
-            }
-            else{
-                return_list.add(new ChessMove(myPosition, newPosition, null));
 
+    public Collection<ChessMove> P_Moves(ChessBoard board, ChessPosition myPosition) {
+        ArrayList<ChessMove> returnList = new ArrayList<>();
+        int currentRow = myPosition.getRow();
+        int currentCol = myPosition.getColumn();
+        int direction;
+        int startRow;
+        int promotionRow;
+
+        if (this.Color == ChessGame.TeamColor.WHITE) {
+            direction = 1;//WHite pawns
+            startRow = 2;
+            promotionRow = 8;
+        } else {
+            direction = -1; // Black pawns
+            startRow = 7;
+            promotionRow = 1;
+        }
+
+        // Single move forward
+        addMoveIfValid(board, myPosition, currentRow + direction, currentCol, returnList, promotionRow);
+
+        // move up 2 if it hasn't change from initial position
+        if (currentRow == startRow && board.getPiece(new ChessPosition(currentRow + direction, currentCol)) == null) {
+            addMoveIfValid(board, myPosition, currentRow + (2 * direction), currentCol, returnList, promotionRow);
+        }
+
+        // each option for capturing a piece diagnolly
+        CaptureMove(board, myPosition, currentRow + direction, currentCol - 1, returnList, promotionRow);
+        CaptureMove(board, myPosition, currentRow + direction, currentCol + 1, returnList, promotionRow);
+
+        return returnList;
+    }
+
+    private void addMoveIfValid(ChessBoard board, ChessPosition fromPosition, int toRow, int toCol, ArrayList<ChessMove> moves, int promotionRow) {
+        if (inTheBounds(toRow, toCol) && board.getPiece(new ChessPosition(toRow, toCol)) == null) {
+            ChessPosition toPosition = new ChessPosition(toRow, toCol);
+            if (toRow == promotionRow) {
+                promotionMoves(fromPosition, toPosition, moves);
+            } else {
+                moves.add(new ChessMove(fromPosition, toPosition, null));
             }
         }
-        //move forward two squares if it is still in starting position
-        if ((this.Color == ChessGame.TeamColor.WHITE && myPosition.getRow() == 6) || (this.Color == ChessGame.TeamColor.BLACK && myPosition.getRow() == 1)) { // it is the two circumstances in column where the pawns haven't moved
-            newRow = myPosition.getRow() + (2 * direction);
-            ChessPosition newPosition = new ChessPosition(newRow, newCol);
-            ChessPiece newPiece = board.getPiece(newPosition);
-            if (newPiece == null && board.getPiece(new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn())) == null) {
-                return_list.add(new ChessMove(myPosition, newPosition, null));
-            } // have to also check if moving one is clear in order to move up two
-        }
-        // take a piece diagnol
-        int leftCapture = myPosition.getColumn() - 1;
-        if (leftCapture >= 0) {
-            ChessPosition leftPosition = new ChessPosition(newRow, leftCapture);
-            ChessPiece leftPiece = board.getPiece(leftPosition);
-            if (leftPiece != null && leftPiece.getTeamColor() != this.Color) {
-                return_list.add(new ChessMove(myPosition, leftPosition, null));
+    }
+
+    private void CaptureMove(ChessBoard board, ChessPosition fromPosition, int toRow, int toCol, ArrayList<ChessMove> moves, int promotionRow) {
+        if (inTheBounds(toRow, toCol)) {
+            ChessPosition toPosition = new ChessPosition(toRow, toCol);
+            ChessPiece pieceAtDestination = board.getPiece(toPosition);
+            if (pieceAtDestination != null && pieceAtDestination.getTeamColor() != this.Color) {
+                if (toRow == promotionRow) {
+                    promotionMoves(fromPosition, toPosition, moves);
+                } else {
+                    moves.add(new ChessMove(fromPosition, toPosition, null));
+                }
             }
         }
-        int rightCapture = myPosition.getColumn() - 1;
-        if (rightCapture >= 0) {
-            ChessPosition rightPosition = new ChessPosition(newRow, rightCapture);
-            ChessPiece rightPiece = board.getPiece(rightPosition);
-            if (rightPiece != null && rightPiece.getTeamColor() != this.Color) {
-                return_list.add(new ChessMove(myPosition, rightPosition, null));
-            }
-        }
-        return return_list;
+    }
+
+    private void promotionMoves(ChessPosition fromPosition, ChessPosition toPosition, ArrayList<ChessMove> moves) {
+        moves.add(new ChessMove(fromPosition, toPosition, ChessPiece.PieceType.QUEEN));
+        moves.add(new ChessMove(fromPosition, toPosition, ChessPiece.PieceType.ROOK));
+        moves.add(new ChessMove(fromPosition, toPosition, ChessPiece.PieceType.BISHOP));
+        moves.add(new ChessMove(fromPosition, toPosition, ChessPiece.PieceType.KNIGHT));
+    }
+
+    private boolean inTheBounds(int row, int col) {
+        return row >= 1 && row <= 8 && col >= 1 && col <= 8;
     }
 }
