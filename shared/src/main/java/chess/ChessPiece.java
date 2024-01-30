@@ -57,7 +57,7 @@ public class ChessPiece {
         switch (this.type) {
             case BISHOP:
                 Bishop bishop = new Bishop(this.pieceColor);
-                all_moves = bishop.B_Moves(board, myPosition);
+                all_moves = bishop.B_Moves(board, myPosition, this);
                 break;
             //Bishop.B_moves
             case KING:
@@ -70,7 +70,7 @@ public class ChessPiece {
                 break;
             case QUEEN:
                 Queen queen = new Queen(this.pieceColor);
-                all_moves = queen.Q_Moves(board,myPosition);
+                all_moves = queen.Q_Moves(board,myPosition, this);
                 break;
             case ROOK:
                 Rook rook = new Rook(this.pieceColor);
