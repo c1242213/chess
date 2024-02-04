@@ -11,15 +11,15 @@ public class Pawn {
 
 
     public Collection<ChessMove> P_Moves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> returnList = new ArrayList<>();
-        int currentRow = myPosition.getRow();
-        int currentCol = myPosition.getColumn();
+        Collection<ChessMove> returnList = new ArrayList<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
         int direction;
         int startRow;
         int promotionRow;
 
         if (this.Color == ChessGame.TeamColor.WHITE) {
-            direction = 1;//WHite pawns
+            direction = 1;//White pawns
             startRow = 2;
             promotionRow = 8;
         } else {
@@ -29,24 +29,24 @@ public class Pawn {
         }
 
         // Single move forward
-        addMoveIfValid(board, myPosition, currentRow + direction, currentCol, returnList, promotionRow);
+        addMoveIfValid(board, myPosition, row + direction, col, returnList, promotionRow);
 
-        // move up 2 if it hasn't change from initial position
-        if (currentRow == startRow && board.getPiece(new ChessPosition(currentRow + direction, currentCol)) == null) {
-            addMoveIfValid(board, myPosition, currentRow + (2 * direction), currentCol, returnList, promotionRow);
+        // move up 2 if not change from initial position
+        if (row == startRow && board.getPiece(new ChessPosition(row + direction, col)) == null) {
+            addMoveIfValid(board, myPosition, row + (2 * direction), col, returnList, promotionRow);
         }
 
         // each option for capturing a piece diagnolly
-        CaptureMove(board, myPosition, currentRow + direction, currentCol - 1, returnList, promotionRow);
-        CaptureMove(board, myPosition, currentRow + direction, currentCol + 1, returnList, promotionRow);
+        CaptureMove(board, myPosition, row + direction, col - 1, returnList, promotionRow);
+        CaptureMove(board, myPosition, row + direction, col + 1, returnList, promotionRow);
 
         return returnList;
     }
 
-    private void addMoveIfValid(ChessBoard board, ChessPosition fromPosition, int toRow, int toCol, ArrayList<ChessMove> moves, int promotionRow) {
-        if (inTheBounds(toRow, toCol) && board.getPiece(new ChessPosition(toRow, toCol)) == null) {
-            ChessPosition toPosition = new ChessPosition(toRow, toCol);
-            if (toRow == promotionRow) {
+    private void addMoveIfValid(ChessBoard board, ChessPosition fromPosition, int Row, int Col, Collection<ChessMove> moves, int promotionRow) {
+        if (ChessPiece.inTheBounds(Row, Col) && board.getPiece(new ChessPosition(Row, Col)) == null) {
+            ChessPosition toPosition = new ChessPosition(Row, Col);
+            if (Row == promotionRow) {
                 promotionMoves(fromPosition, toPosition, moves);
             } else {
                 moves.add(new ChessMove(fromPosition, toPosition, null));
@@ -54,8 +54,8 @@ public class Pawn {
         }
     }
 
-    private void CaptureMove(ChessBoard board, ChessPosition fromPosition, int toRow, int toCol, ArrayList<ChessMove> moves, int promotionRow) {
-        if (inTheBounds(toRow, toCol)) {
+    private void CaptureMove(ChessBoard board, ChessPosition fromPosition, int toRow, int toCol, Collection<ChessMove> moves, int promotionRow) {
+        if (ChessPiece.inTheBounds(toRow, toCol)){
             ChessPosition toPosition = new ChessPosition(toRow, toCol);
             ChessPiece pieceAtDestination = board.getPiece(toPosition);
             if (pieceAtDestination != null && pieceAtDestination.getTeamColor() != this.Color) {
@@ -68,14 +68,11 @@ public class Pawn {
         }
     }
 
-    private void promotionMoves(ChessPosition fromPosition, ChessPosition toPosition, ArrayList<ChessMove> moves) {
+    private void promotionMoves(ChessPosition fromPosition, ChessPosition toPosition, Collection<ChessMove> moves) {
         moves.add(new ChessMove(fromPosition, toPosition, ChessPiece.PieceType.QUEEN));
         moves.add(new ChessMove(fromPosition, toPosition, ChessPiece.PieceType.ROOK));
         moves.add(new ChessMove(fromPosition, toPosition, ChessPiece.PieceType.BISHOP));
         moves.add(new ChessMove(fromPosition, toPosition, ChessPiece.PieceType.KNIGHT));
     }
 
-    private boolean inTheBounds(int row, int col) {
-        return row >= 1 && row <= 8 && col >= 1 && col <= 8;
-    }
 }

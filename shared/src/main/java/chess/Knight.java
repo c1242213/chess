@@ -14,7 +14,7 @@ public class Knight {
 
 
     public Collection<ChessMove> N_Moves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> return_list = new ArrayList<>();
+        Collection<ChessMove> return_list = new ArrayList<>();
         int[][] moves = {
                 {2, 1}, {1, 2},
                 {-1, 2}, {-2, 1},
@@ -22,11 +22,11 @@ public class Knight {
                 {1, -2}, {2, -1}
         };
 
-        for (int i = 0; i < moves.length; i++) {
+        for (int i = 0; i < 8; i++) {
             int newRow = myPosition.getRow() + moves[i][0];
             int newCol = myPosition.getColumn() + moves[i][1];
 
-            if (newRow >= 1 && newRow <= 8 && newCol >= 1 && newCol <= 8) {
+            if (ChessPiece.inTheBounds(newRow, newCol)) {
                 ChessPosition newPosition = new ChessPosition(newRow, newCol);
                 ChessPiece newPiece = board.getPiece(newPosition);
                 if (newPiece == null || newPiece.getTeamColor() != Color) {

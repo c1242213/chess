@@ -108,7 +108,7 @@ public class ChessPiece {
         for (int i = 1; i < 8; i++) {
             int newRow = myPosition.getRow() + deltaRow*i;
             int newCol = myPosition.getColumn() + deltaCol*i;
-            if (newRow >= 1 && newCol >= 1 && newRow <= 8 && newCol <= 8) {
+            if (ChessPiece.inTheBounds(newRow,newCol)) {
                 ChessPosition newPosition = new ChessPosition(newRow, newCol);
                 ChessPiece newPiece = board.getPiece(newPosition);
 
@@ -122,5 +122,8 @@ public class ChessPiece {
                 }
             }
         }
+    }
+    public static boolean inTheBounds(int row, int col) {
+        return row >= 1 && row <= 8 && col >= 1 && col <= 8;
     }
 }
