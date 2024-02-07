@@ -1,5 +1,5 @@
 package chess;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -52,7 +52,38 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        //after you make a move you're not in check
+        ChessPiece thisPiece = board.getPiece(startPosition);
+        Collection<ChessMove> validMoves = new HashSet<>();
+        if (thisPiece != null){
+            Collection<ChessMove> returnMoves = thisPiece.pieceMoves(board, startPosition);
+            for(ChessMove move: returnMoves) {
+                ChessBoard newBoard = cloneBoard(board);
+                board.addPiece(move.getEndPosition(), thisPiece);
+                board.addPiece(startPosition, null);
+                if(!isInCheck(thisPiece.getTeamColor())){
+                    validMoves.add(move);
+                }
+                board = newBoard;
+            }
+        }
+
+        return validMoves;
+    }
+
+    public ChessBoard cloneBoard(ChessBoard board){
+        ChessBoard testBoard = new ChessBoard();
+
+        for(int col = 1; col < 9; col++){
+            for(int row = 1; row < 9; row++){
+                ChessPosition newPosition = new ChessPosition(row, col);
+                ChessPiece newPiece = board.getPiece(newPosition);
+                if(newPiece != null){
+                    testBoard.addPiece(newPosition, newPiece);
+                }
+            }
+        }
+        return testBoard;
     }
 
     /**
@@ -62,7 +93,59 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> moves = validMoves(move.getStartPosition());
+        if(moves == null){
+            throw new InvalidMoveException();
+        }
+        if(moves.contains(move)) {
+
+            if(move.getPromotionPiece() != null){
+                ChessPiece promotionPiece = new ChessPiece(team, move.getPromotionPiece());
+                board.addPiece(move.getEndPosition(), promotionPiece);
+                board.addPiece(move.getStartPosition(), null);
+                if(this.team == TeamColor.WHITE){
+                    setTeamTurn(TeamColor.BLACK);
+                }
+                else{
+                    setTeamTurn(TeamColor.WHITE);
+                }
+            }
+
+            ChessPiece thisPiece = board.getPiece(move.getStartPosition());
+            board.addPiece(move.getEndPosition(), thisPiece);
+            board.addPiece(move.getStartPosition(), null);
+            if(this.team == TeamColor.WHITE){
+                setTeamTurn(TeamColor.BLACK);
+            }
+            else{
+                setTeamTurn(TeamColor.WHITE);
+            }
+
+        }
+        if(move.getPromotionPiece() != null){
+            ChessPiece promotionPiece = new ChessPiece(team, move.getPromotionPiece());
+            board.addPiece(move.getEndPosition(), promotionPiece);
+            board.addPiece(move.getStartPosition(), null);
+            if(this.team == TeamColor.WHITE){
+                setTeamTurn(TeamColor.BLACK);
+            }
+            else{
+                setTeamTurn(TeamColor.WHITE);
+            }
+        }
+
+        if(!moves.contains(move)) {
+            throw new InvalidMoveException();
+
+            if(this.team == TeamColor.WHITE){
+                setTeamTurn(TeamColor.BLACK);
+            }
+            else{
+                setTeamTurn(TeamColor.WHITE);
+            }
+        }
+
+
     }
 
     /**
