@@ -189,7 +189,7 @@ public class ChessGame {
             for (int row = 1; row < 9; row++) {
                 ChessPosition newPosition = new ChessPosition(row, col);
                 ChessPiece newPiece = board.getPiece(newPosition);
-                if(newPiece != null){
+                if(newPiece != null && newPiece.getTeamColor() == teamColor){
                     Collection<ChessMove> validMoves = validMoves(newPosition);
                     if (!(validMoves.isEmpty())) {
                         return false;
