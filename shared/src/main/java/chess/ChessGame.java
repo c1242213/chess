@@ -97,55 +97,32 @@ public class ChessGame {
         if(moves == null){
             throw new InvalidMoveException();
         }
+        if (board.getPiece(move.getStartPosition()).getTeamColor() != team){
+            throw new InvalidMoveException();
+        }
         if(moves.contains(move)) {
 
             if(move.getPromotionPiece() != null){
                 ChessPiece promotionPiece = new ChessPiece(team, move.getPromotionPiece());
                 board.addPiece(move.getEndPosition(), promotionPiece);
                 board.addPiece(move.getStartPosition(), null);
-                if(this.team == TeamColor.WHITE){
-                    setTeamTurn(TeamColor.BLACK);
-                }
-                else{
-                    setTeamTurn(TeamColor.WHITE);
-                }
-            }
 
-            ChessPiece thisPiece = board.getPiece(move.getStartPosition());
-            board.addPiece(move.getEndPosition(), thisPiece);
-            board.addPiece(move.getStartPosition(), null);
-            if(this.team == TeamColor.WHITE){
-                setTeamTurn(TeamColor.BLACK);
-            }
-            else{
-                setTeamTurn(TeamColor.WHITE);
+            }else {
+                ChessPiece thisPiece = board.getPiece(move.getStartPosition());
+                board.addPiece(move.getEndPosition(), thisPiece);
+                board.addPiece(move.getStartPosition(), null);
             }
 
         }
-        if(move.getPromotionPiece() != null){
-            ChessPiece promotionPiece = new ChessPiece(team, move.getPromotionPiece());
-            board.addPiece(move.getEndPosition(), promotionPiece);
-            board.addPiece(move.getStartPosition(), null);
-            if(this.team == TeamColor.WHITE){
-                setTeamTurn(TeamColor.BLACK);
-            }
-            else{
-                setTeamTurn(TeamColor.WHITE);
-            }
-        }
-
-        if(!moves.contains(move)) {
+        if(!(moves.contains(move))) {
             throw new InvalidMoveException();
-
-            if(this.team == TeamColor.WHITE){
-                setTeamTurn(TeamColor.BLACK);
-            }
-            else{
-                setTeamTurn(TeamColor.WHITE);
-            }
         }
-
-
+        if(this.team == TeamColor.WHITE){
+            setTeamTurn(TeamColor.BLACK);
+        }
+        else{
+            setTeamTurn(TeamColor.WHITE);
+        }
     }
 
     /**
