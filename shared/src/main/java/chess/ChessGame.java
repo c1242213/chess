@@ -223,7 +223,7 @@ public class ChessGame {
                     Collection<ChessMove> moves = validMoves(newPosition);
 
                     if (!moves.isEmpty()) {
-                        return true;
+                        return false;
                     }
                 }
             }
