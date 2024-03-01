@@ -1,38 +1,45 @@
 package server;
-import com.google.gson.Gson;
-import handlers.LoginHandler;
-import handlers.RegisterHandler;
-
-
+import server.websocket.WebSocketHandler;
+import dataAccess.DataAccessException;
+import service.Service;
 import spark.*;
-
-import java.util.Collections;
+import dataAccess.DataAccess;
 
 public class Server {
+    private final Service service;
+    private final WebSocketHandler webSocketHandler;
 
-
+    public Server(DataAccess dataAccess) {
+        service = new Service(dataAccess);
+        webSocketHandler = new WebSocketHandler();
+    }
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
 
+        // Register your endpoints and handle exceptions here.
+        Spark.webSocket("/connect", webSocketHandler);
 
-        Spark.post("/user", (req, res) -> (new RegisterHandler()).handle(req, res));
-        Spark.post("/session", (req, res) -> (new LoginHandler()).handle(req, res));
-//        Spark.delete("/session", (req, res) -> (new LogoutHandler()).handle(req, res));
-//        Spark.get("/game", (req, res) -> (new ListGamesHandler()).handle(req, res));
-//        Spark.post("/game", (req, res) -> (new CreateGameHandler()).handle(req, res));
-//        Spark.put("/game", (req, res) -> (new JoinGameHandler()).handle(req, res));
-//        Spark.delete("/db", (req, res) -> (new ClearHandler()).handle(req, res));
-
+        Spark.delete("/db", this::clear);
+        Spark.post("/user", this::register);
+        Spark.post("/session", this::login);
+        Spark.delete("/session", this::logout);
+        Spark.get("/game", this::listGames);
+        Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
+        Spark.exception(DataAccessException.class, this::exceptionHandler);
         Spark.awaitInitialization();
         return Spark.port();
     }
+
+    private void exceptionHandler(DataAccessException ex, Request req, Response res) {
+        res.status(ex.StatusCode());
+    }
+
 
     public void stop() {
         Spark.stop();
         Spark.awaitStop();
     }
-
-
 }
