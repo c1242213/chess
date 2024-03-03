@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Collection;
+
 public class UserData {
     String username;
     String password;
@@ -34,4 +36,5 @@ public class UserData {
     public void setEmail(String email) {
         this.email = email;
     }
-}
+
+    }
