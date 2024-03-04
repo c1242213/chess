@@ -120,7 +120,7 @@ public class Server {
     public Object createGame(Request req, Response res) {
         try {
             var newGame = new Gson().fromJson(req.body(), model.GameData.class);
-            newGame = service.createGame(req.headers("Authorization"), newGame.getGameID());
+            newGame = service.createGame(req.headers("Authorization"), newGame.getGameName());
             return new Gson().toJson(newGame);
         } catch (ResponseException e) {
             res.status(e.StatusCode());
