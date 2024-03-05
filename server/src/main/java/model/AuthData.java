@@ -6,7 +6,7 @@ public class AuthData {
     String authToken;
     String Username;
 
-    AuthData(){
+    public AuthData(){
         this.authToken = UUID.randomUUID().toString();
     }
 
