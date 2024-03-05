@@ -16,6 +16,11 @@ import java.util.Map;
 public class Server {
     private final Service service;
 
+    public static void main(String[] args) {
+        new Server().run(8080);
+    }
+
+
     public Server() {
         this.service = new Service();
     }
@@ -119,9 +124,15 @@ public class Server {
 
     public Object createGame(Request req, Response res) {
         try {
+            String authToken = req.headers("authorization");
             var newGame = new Gson().fromJson(req.body(), model.GameData.class);
-            newGame = service.createGame(req.headers("Authorization"), newGame.getGameName());
-            return new Gson().toJson(newGame);
+            int id = service.createGame(req.headers("Authorization"), newGame.getGameName());
+            GameData game = new GameData();
+            game.setGameID(id);
+            var serializer = new Gson();
+            var json = serializer.toJson(game);
+            res.status(200);
+            return json;
         } catch (ResponseException e) {
             res.status(e.StatusCode());
             Map<String, String> errorResponse = new HashMap<>();
