@@ -61,20 +61,7 @@ public class ChessMove {
         return Objects.equals(getStartPosition(), chessMove.getStartPosition()) && Objects.equals(getEndPosition(), chessMove.getEndPosition()) && getPromotionPiece() == chessMove.getPromotionPiece();
     }
 
-    public static void specMove(ChessGame.TeamColor color, ChessBoard board, ChessPosition myPosition, Collection<ChessMove> return_list, int[][] moves) {
-        for (int i = 0; i < 8; i++) {
-            int newRow = myPosition.getRow() + moves[i][0];
-            int newCol = myPosition.getColumn() + moves[i][1];
 
-            if (ChessPiece.inTheBounds(newRow, newCol)) {
-                ChessPosition newPosition = new ChessPosition(newRow, newCol);
-                ChessPiece newPiece = board.getPiece(newPosition);
-                if (newPiece == null || newPiece.getTeamColor() != color) {
-                    return_list.add(new ChessMove(myPosition, newPosition, null));
-                }
-            }
-        }
-    }
 
     @Override
     public int hashCode() {

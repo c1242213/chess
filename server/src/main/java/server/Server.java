@@ -1,9 +1,11 @@
 package server;
 import com.google.gson.Gson;
+import exception.ErrorHandle;
 import exception.ResponseException;
 import model.UserData;
 import model.GameData;
 //import server.websocket.WebSocketHandler;
+import org.eclipse.jetty.server.handler.ErrorHandler;
 import service.Service;
 import spark.*;
 
@@ -52,16 +54,8 @@ public class Server {
         try {
             var user = new Gson().fromJson(req.body(), UserData.class);
             return new Gson().toJson(service.register(user));
-        } catch (ResponseException e) {
-            res.status(e.StatusCode());
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", e.getMessage());
-            return new Gson().toJson(errorResponse);
         } catch (Exception e) {
-            res.status(500);
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Error: Internal Server Error");
-            return new Gson().toJson(errorResponse);
+            return ErrorHandle.handleException(e, res);
         }
     }
 
@@ -69,16 +63,8 @@ public class Server {
         try {
             var user = new Gson().fromJson(req.body(), UserData.class);
             return new Gson().toJson(service.login(user));
-        } catch (ResponseException e) {
-            res.status(e.StatusCode());
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", e.getMessage());
-            return new Gson().toJson(errorResponse);
         } catch (Exception e) {
-            res.status(500);
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Error: Internal Server Error");
-            return new Gson().toJson(errorResponse);
+            return ErrorHandle.handleException(e, res);
         }
     }
 
@@ -87,16 +73,8 @@ public class Server {
             service.logout(req.headers("Authorization"));
             res.status(200);
             return "";
-        } catch (ResponseException e) {
-            res.status(e.StatusCode());
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", e.getMessage());
-            return new Gson().toJson(errorResponse);
         } catch (Exception e) {
-            res.status(500);
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Error: Internal Server Error");
-            return new Gson().toJson(errorResponse);
+            return ErrorHandle.handleException(e, res);
         }
     }
 
@@ -106,16 +84,8 @@ public class Server {
             Map<String, Object> response = new HashMap<>();
             response.put("games", games);
             return new Gson().toJson(response);
-        } catch (ResponseException e) {
-            res.status(e.StatusCode());
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", e.getMessage());
-            return new Gson().toJson(errorResponse);
         } catch (Exception e) {
-            res.status(500);
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Error: Internal Server Error");
-            return new Gson().toJson(errorResponse);
+            return ErrorHandle.handleException(e, res);
         }
     }
 
@@ -130,16 +100,8 @@ public class Server {
             var json = serializer.toJson(game);
             res.status(200);
             return json;
-        } catch (ResponseException e) {
-            res.status(e.StatusCode());
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", e.getMessage());
-            return new Gson().toJson(errorResponse);
         } catch (Exception e) {
-            res.status(500);
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Error: Internal Server Error");
-            return new Gson().toJson(errorResponse);
+            return ErrorHandle.handleException(e, res);
         }
     }
 
@@ -153,16 +115,8 @@ public class Server {
             Map<String, String> successResponse = new HashMap<>();
             successResponse.put("message", "Success");
             return new Gson().toJson(successResponse);
-        } catch (ResponseException e) {
-            res.status(e.StatusCode());
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", e.getMessage());
-            return new Gson().toJson(errorResponse);
         } catch (Exception e) {
-            res.status(500);
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Error: Internal Server Error");
-            return new Gson().toJson(errorResponse);
+            return ErrorHandle.handleException(e, res);
         }
     }
 
@@ -173,16 +127,8 @@ public class Server {
             Map<String, String> successResponse = new HashMap<>();
             successResponse.put("message", "Success");
             return new Gson().toJson(successResponse);
-        } catch (ResponseException e) {
-            res.status(e.StatusCode());
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", e.getMessage());
-            return new Gson().toJson(errorResponse);
         } catch (Exception e) {
-            res.status(500);
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Error: Internal Server Error");
-            return new Gson().toJson(errorResponse);
+            return ErrorHandle.handleException(e, res);
         }
     }
 

@@ -21,7 +21,7 @@ public class Knight {
                 {1, -2}, {2, -1}
         };
 
-        ChessMove.specMove(color, board, myPosition, return_list, moves);
+        ChessPiece.specMove(color, board, myPosition, return_list, moves);
         return return_list;
 
     }
