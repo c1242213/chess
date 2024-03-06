@@ -2,13 +2,10 @@ package server;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import model.UserData;
-import model.JoinData;
-import model.AuthData;
 import model.GameData;
 //import server.websocket.WebSocketHandler;
 import service.Service;
 import spark.*;
-import dataAccess.DataAccess;
 
 import java.util.HashMap;
 import java.util.Map;

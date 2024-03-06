@@ -166,43 +166,6 @@ public class ServiceTests {
         }
     }
 
-//    @Test
-//    public void testJoinGameWatcherSuccessful() throws ResponseException {
-//        UserData userData = new UserData("username", "password", "test@test.com");
-//        AuthData authData = service.register(userData);
-//        String authToken = authData.getAuthToken();
-//        service.createGame(authToken, "gameName");
-//        String clientColor = null;
-//        int gameID = 1;
-//        try {
-//            service.joinGame(clientColor, gameID, authToken);
-//        } catch (ResponseException e) {
-//            Assertions.fail("Unexpected exception: " + e.getMessage());
-//        }
-//    }
-
-//    @Test
-//    public void testJoinGameWatchersUnsuccessful throws ResponseException {
-//        UserData userData = new UserData("username", "password", "test@test.com");
-//        AuthData authData = service.register(userData);
-//        String authToken = authData.getAuthToken();
-//        UserData userData2 = new UserData("username2", "password", "test@test.com");
-//        AuthData authData2 = service.register(userData2);
-//        String authToken2 = authData2.getAuthToken();
-//        UserData userData3 = new UserData("username3", "password", "test@test.com");
-//        AuthData authData3 = service.register(userData3);
-//        String authToken3 = authData3.getAuthToken();
-//        service.createGame(authToken, "gameName");
-//        String clientColor = null;
-//        int gameID = 1;
-//        try {
-//            service.joinGame(clientColor, gameID, authToken);
-//            service.joinGame(clientColor, gameID, authToken2);
-//            service.joinGame(clientColor, gameID, authToken3);
-//        } catch (ResponseException e) {
-//            Assertions.fail("Unexpected exception: " + e.getMessage());
-//        }
-//    }
 
     @Test
     public void testJoinGameUnsuccessful() throws ResponseException {

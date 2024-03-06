@@ -3,7 +3,6 @@ package dataAccess;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.UUID;
 
 import chess.ChessGame;
 import exception.ResponseException;
@@ -18,21 +17,7 @@ public class MemoryDataAccess implements DataAccess{
     private HashMap<String, AuthData> authTokens = new HashMap<>();
 
     public AuthData register(UserData userData) throws ResponseException {
-//        //Check user
-//        if(users.containsKey(userData.getUsername())) {
-//            if (userData.getUsername() == null) {
-//                throw new ResponseException(401, "Error: Unauthorized");
-//            }
-//        }
 
-//
-//        AuthData authData = new AuthData();
-//        authData.setUsername(userData.getUsername());
-//        // Store the AuthData object using the authToken as the key
-//        authTokens.put(authData.getAuthToken(), authData);
-//
-//        return authData;
-//    }
         // First, check if the username is null or empty
         if (userData.getUsername() == null || userData.getUsername().isEmpty()) {
             throw new ResponseException(401, "Error: Username cannot be null or empty");
@@ -111,7 +96,6 @@ public class MemoryDataAccess implements DataAccess{
         if (!authTokens.containsKey(authToken)){
             throw new ResponseException(401, "Error: Unauthorized");
         }
-//        GameData game = generateGame(gameName);
         //Create a new game
         GameData game = newGame(gameName);
         return game.getGameID();
