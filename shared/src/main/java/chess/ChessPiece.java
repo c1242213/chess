@@ -1,5 +1,4 @@
 package chess;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -62,23 +61,23 @@ public class ChessPiece {
             //Bishop.B_moves
             case KING:
                 King king = new King(this.pieceColor);
-                all_moves = king.K_Moves(board, myPosition);
+                all_moves = king.KingMoves(board, myPosition);
                 break;
             case KNIGHT:
                 Knight knight = new Knight(this.pieceColor);
-                all_moves = knight.N_Moves(board, myPosition);
+                all_moves = knight.KnightMoves(board, myPosition);
                 break;
             case QUEEN:
                 Queen queen = new Queen(this.pieceColor);
-                all_moves = queen.Q_Moves(board,myPosition, this);
+                all_moves = queen.QueenMoves(board,myPosition, this);
                 break;
             case ROOK:
                 Rook rook = new Rook(this.pieceColor);
-                all_moves = rook.R_Moves(board,myPosition,this);
+                all_moves = rook.RookMoves(board,myPosition,this);
                 break;
             case PAWN:
                 Pawn pawn = new Pawn(this.pieceColor);
-                all_moves = pawn.P_Moves(board,myPosition);
+                all_moves = pawn.PawnMoves(board,myPosition);
                 break;
         }
         return all_moves;
@@ -123,7 +122,7 @@ public class ChessPiece {
             }
         }
     }
-    public static void specMove(ChessGame.TeamColor color, ChessBoard board, ChessPosition myPosition, Collection<ChessMove> return_list, int[][] moves) {
+    public static void specMove(ChessGame.TeamColor pieceColor, ChessBoard board, ChessPosition myPosition, Collection<ChessMove> return_list, int[][] moves) {
         for (int i = 0; i < 8; i++) {
             int newRow = myPosition.getRow() + moves[i][0];
             int newCol = myPosition.getColumn() + moves[i][1];
@@ -131,7 +130,7 @@ public class ChessPiece {
             if (ChessPiece.inTheBounds(newRow, newCol)) {
                 ChessPosition newPosition = new ChessPosition(newRow, newCol);
                 ChessPiece newPiece = board.getPiece(newPosition);
-                if (newPiece == null || newPiece.getTeamColor() != color) {
+                if (newPiece == null || newPiece.getTeamColor() != pieceColor) {
                     return_list.add(new ChessMove(myPosition, newPosition, null));
                 }
             }

@@ -5,12 +5,12 @@ public class Pawn {
 
     private final ChessGame.TeamColor color;
 
-    public Pawn(ChessGame.TeamColor Color) {
-        this.color = Color;
+    public Pawn(ChessGame.TeamColor pieceColor) {
+        this.color = pieceColor;
     }
 
 
-    public Collection<ChessMove> P_Moves(ChessBoard board, ChessPosition myPosition) {
+    public Collection<ChessMove> PawnMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> returnList = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -43,10 +43,10 @@ public class Pawn {
         return returnList;
     }
 
-    private void addMoveIfValid(ChessBoard board, ChessPosition fromPosition, int Row, int Col, Collection<ChessMove> moves, int promotionRow) {
-        if (ChessPiece.inTheBounds(Row, Col) && board.getPiece(new ChessPosition(Row, Col)) == null) {
-            ChessPosition toPosition = new ChessPosition(Row, Col);
-            if (Row == promotionRow) {
+    private void addMoveIfValid(ChessBoard board, ChessPosition fromPosition, int row, int col, Collection<ChessMove> moves, int promotionRow) {
+        if (ChessPiece.inTheBounds(row, col) && board.getPiece(new ChessPosition(row, col)) == null) {
+            ChessPosition toPosition = new ChessPosition(row, col);
+            if (row == promotionRow) {
                 promotionMoves(fromPosition, toPosition, moves);
             } else {
                 moves.add(new ChessMove(fromPosition, toPosition, null));
@@ -54,12 +54,12 @@ public class Pawn {
         }
     }
 
-    private void CaptureMove(ChessBoard board, ChessPosition fromPosition, int toRow, int toCol, Collection<ChessMove> moves, int promotionRow) {
-        if (ChessPiece.inTheBounds(toRow, toCol)){
-            ChessPosition toPosition = new ChessPosition(toRow, toCol);
+    private void CaptureMove(ChessBoard board, ChessPosition fromPosition, int row, int col, Collection<ChessMove> moves, int promotionRow) {
+        if (ChessPiece.inTheBounds(row, col)){
+            ChessPosition toPosition = new ChessPosition(row, col);
             ChessPiece pieceAtDestination = board.getPiece(toPosition);
             if (pieceAtDestination != null && pieceAtDestination.getTeamColor() != this.color) {
-                if (toRow == promotionRow) {
+                if (row == promotionRow) {
                     promotionMoves(fromPosition, toPosition, moves);
                 } else {
                     moves.add(new ChessMove(fromPosition, toPosition, null));

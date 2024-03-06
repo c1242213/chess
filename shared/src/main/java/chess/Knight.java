@@ -7,13 +7,13 @@ public class Knight {
 
     private final ChessGame.TeamColor color;
 
-    public Knight(ChessGame.TeamColor Color) {
-        this.color = Color;
+    public Knight(ChessGame.TeamColor pieceColor) {
+        this.color = pieceColor;
     }
 
 
-    public Collection<ChessMove> N_Moves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> return_list = new ArrayList<>();
+    public Collection<ChessMove> KnightMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> returnList = new ArrayList<>();
         int[][] moves = {
                 {2, 1}, {1, 2},
                 {-1, 2}, {-2, 1},
@@ -21,8 +21,8 @@ public class Knight {
                 {1, -2}, {2, -1}
         };
 
-        ChessPiece.specMove(color, board, myPosition, return_list, moves);
-        return return_list;
+        ChessPiece.specMove(color, board, myPosition, returnList, moves);
+        return returnList;
 
     }
 
