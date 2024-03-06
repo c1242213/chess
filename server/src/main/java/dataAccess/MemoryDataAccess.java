@@ -59,16 +59,7 @@ public class MemoryDataAccess implements DataAccess{
     }
 
     public void logout(String authToken) throws ResponseException {
-//        //Check auth token
-//        if(authTokens.containsKey(authToken)){
-//            if (authToken == null) {
-//                throw new ResponseException(401, "Error: Unauthorized");
-//            }
-//        }
-//        //Remove the auth token
-//        authTokens.remove(authToken);
-//    }
-        // First, check if the authToken is null or empty
+
         if (authToken == null || authToken.isEmpty()) {
             throw new ResponseException(401, "Error: Unauthorized - Token is invalid");
         }
