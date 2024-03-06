@@ -2,14 +2,13 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
 public class Knight {
 
-    private final ChessGame.TeamColor Color;
+    private final ChessGame.TeamColor color;
 
     public Knight(ChessGame.TeamColor Color) {
-        this.Color = Color;
+        this.color = Color;
     }
 
 
@@ -22,19 +21,11 @@ public class Knight {
                 {1, -2}, {2, -1}
         };
 
-        for (int i = 0; i < 8; i++) {
-            int newRow = myPosition.getRow() + moves[i][0];
-            int newCol = myPosition.getColumn() + moves[i][1];
-
-            if (ChessPiece.inTheBounds(newRow, newCol)) {
-                ChessPosition newPosition = new ChessPosition(newRow, newCol);
-                ChessPiece newPiece = board.getPiece(newPosition);
-                if (newPiece == null || newPiece.getTeamColor() != Color) {
-                    return_list.add(new ChessMove(myPosition, newPosition, null));
-                }
-            }
-        }
+        ChessMove.specMove(color, board, myPosition, return_list, moves);
         return return_list;
 
     }
+
+
+
 }

@@ -2,14 +2,13 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
 public class King {
 
-    private final ChessGame.TeamColor Color;
+    private final ChessGame.TeamColor color;
 
     public King(ChessGame.TeamColor Color) {
-        this.Color = Color;
+        this.color = Color;
     }
 
 
@@ -22,19 +21,8 @@ public class King {
                 {-1,1}, {1,-1}
         };
 
-        for (int i = 0; i < 8; i++){
-            int newRow = myPosition.getRow() + moves[i][0];
-            int newCol = myPosition.getColumn() + moves[i][1];
-            ChessPosition newPosition = new ChessPosition(newRow, newCol);
+        ChessMove.specMove(color, board, myPosition, return_list, moves);
 
-            if(ChessPiece.inTheBounds(newRow, newCol)) {
-                ChessPiece newPiece = board.getPiece(newPosition);
-                if(newPiece == null || newPiece.getTeamColor() != this.Color){
-                    return_list.add(new ChessMove(myPosition, newPosition, null));
-                }
-
-            }
-        }
         return return_list;
     }
 }

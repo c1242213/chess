@@ -3,10 +3,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 public class Pawn {
 
-    private final ChessGame.TeamColor Color;
+    private final ChessGame.TeamColor color;
 
     public Pawn(ChessGame.TeamColor Color) {
-        this.Color = Color;
+        this.color = Color;
     }
 
 
@@ -18,7 +18,7 @@ public class Pawn {
         int startRow;
         int promotionRow;
 
-        if (this.Color == ChessGame.TeamColor.WHITE) {
+        if (this.color == ChessGame.TeamColor.WHITE) {
             direction = 1;//White pawns
             startRow = 2;
             promotionRow = 8;
@@ -58,7 +58,7 @@ public class Pawn {
         if (ChessPiece.inTheBounds(toRow, toCol)){
             ChessPosition toPosition = new ChessPosition(toRow, toCol);
             ChessPiece pieceAtDestination = board.getPiece(toPosition);
-            if (pieceAtDestination != null && pieceAtDestination.getTeamColor() != this.Color) {
+            if (pieceAtDestination != null && pieceAtDestination.getTeamColor() != this.color) {
                 if (toRow == promotionRow) {
                     promotionMoves(fromPosition, toPosition, moves);
                 } else {

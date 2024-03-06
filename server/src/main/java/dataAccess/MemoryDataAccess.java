@@ -101,15 +101,15 @@ public class MemoryDataAccess implements DataAccess{
         return game.getGameID();
     }
 
-    public void joinGame(String Color, int gameID, String authToken) throws ResponseException {
+    public void joinGame(String color, int gameID, String authToken) throws ResponseException {
         //Check auth token
         if (!authTokens.containsKey(authToken)){
             throw new ResponseException(401, "Error: Unauthorized");
         }
-        if (!validateGame(Color, gameID)){
+        if (!validateGame(color, gameID)){
             throw new ResponseException(403, "Error: Already taken");
         }
-        joinGameIfValid(Color, gameID, authToken);
+        joinGameIfValid(color, gameID, authToken);
     }
 
     public void clear() throws ResponseException {

@@ -2,14 +2,13 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
 public class Rook {
 
-    private final ChessGame.TeamColor Color;
+    private final ChessGame.TeamColor color;
 
     public Rook(ChessGame.TeamColor Color) {
-        this.Color = Color;
+        this.color = Color;
     }
 
 

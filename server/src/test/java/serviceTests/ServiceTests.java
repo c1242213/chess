@@ -157,10 +157,10 @@ public class ServiceTests {
         AuthData authData = service.register(userData);
         String authToken = authData.getAuthToken();
         service.createGame(authToken, "gameName");
-        String clientColor = "WHITE";
+        String color = "WHITE";
         int gameID = 1;
         try {
-            service.joinGame(clientColor, gameID, authToken);
+            service.joinGame(color, gameID, authToken);
         } catch (ResponseException e) {
             Assertions.fail("Unexpected exception: " + e.getMessage());
         }
@@ -173,10 +173,10 @@ public class ServiceTests {
         AuthData authData = service.register(userData);
         String authToken = authData.getAuthToken();
         service.createGame(authToken, "gameName");
-        String clientColor = "WHITE";
+        String color = "WHITE";
         int gameID = 0;
         try {
-            service.joinGame(clientColor, gameID, authToken);
+            service.joinGame(color, gameID, authToken);
             Assertions.fail("Expected exception");
         } catch (ResponseException e) {
             Assertions.assertEquals(400, e.StatusCode());
