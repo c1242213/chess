@@ -9,10 +9,11 @@ import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import dataAccess.MySqlDataAccess;
 
 
 public class Service {
-    private DataAccess dataAccess = new MemoryDataAccess();
+    private DataAccess dataAccess = new MySQLDataAccess();
 
 
 
