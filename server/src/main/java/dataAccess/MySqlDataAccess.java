@@ -25,7 +25,7 @@ public class MySqlDataAccess implements DataAccess {
     public MySqlDataAccess() {
         try {
             configureDatabase();
-        } catch (DataAccessException e) {
+        } catch (ResponseException e) {
             throw new RuntimeException(e);
         }
     }
@@ -79,6 +79,7 @@ public class MySqlDataAccess implements DataAccess {
             }
         }
     }
+
     public AuthData login(UserData userData) throws ResponseException {
         Gson gson = new Gson();
         String getUserSql = "SELECT json FROM users WHERE username = ?";
@@ -90,22 +91,30 @@ public class MySqlDataAccess implements DataAccess {
                 if (rs.next()) {
                     UserData userFromDb = gson.fromJson(rs.getString("json"), UserData.class);
                     if (userFromDb.getPassword().equals(userData.getPassword())) {
-                        AuthData authData = new AuthData();
+                        AuthData authData = new AuthData(); // Ensure this constructor generates or sets the auth token
                         String insertAuthSql = "INSERT INTO authTokenToUsername (authToken, username) VALUES (?, ?)";
                         try (PreparedStatement authStmt = conn.prepareStatement(insertAuthSql)) {
                             authStmt.setString(1, authData.getAuthToken());
                             authStmt.setString(2, userData.getUsername());
                             authStmt.executeUpdate();
                             return authData;
+                        } catch (SQLException e) {
+                            handleSQLException(e); // Handle exceptions specifically for auth token insertion
                         }
+                    } else {
+                        throw new ResponseException(401, "Unauthorized access: Password does not match");
                     }
+                } else {
+                    throw new ResponseException(404, "User not found");
                 }
             }
-        } catch (SQLException | DataAccessException e) {
-            throw new DataAccessException("Login failed: " + e.getMessage());
+        } catch (SQLException e) {
+            handleSQLException(e);
         }
-        throw new DataAccessException("Unauthorized access");
+
+        throw new ResponseException(500, "Internal Server Error");
     }
+
 
     public void logout(String authToken) throws ResponseException {
         String deleteAuthSql = "DELETE FROM authTokenToUsername WHERE authToken = ?";
@@ -115,12 +124,13 @@ public class MySqlDataAccess implements DataAccess {
             stmt.setString(1, authToken);
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
-                throw new DataAccessException("Logout failed: Auth token not found");
+                throw new ResponseException(404, "Logout failed: Auth token not found");
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Logout failed: " + e.getMessage());
+            handleSQLException(e);
         }
     }
+
     public Collection<GameData> listGames(String authToken) throws ResponseException {
         Gson gson = new Gson();
         Collection<GameData> games = new ArrayList<>();
@@ -133,11 +143,12 @@ public class MySqlDataAccess implements DataAccess {
                 GameData game = gson.fromJson(rs.getString("gameData"), GameData.class);
                 games.add(game);
             }
-        } catch (SQLException | DataAccessException e) {
-            throw new DataAccessException("Failed to list games: " + e.getMessage());
+        } catch (SQLException e) {
+            handleSQLException(e);
         }
         return games;
     }
+
 
     // Method to create a new game
     public int createGame(String authToken, String gameName) throws ResponseException {
@@ -155,83 +166,116 @@ public class MySqlDataAccess implements DataAccess {
                 if (generatedKeys.next()) {
                     return generatedKeys.getInt(1);
                 } else {
-                    throw new DataAccessException("Creating game failed, no ID obtained.");
+                    throw new ResponseException(500, "Creating game failed, no ID obtained."); // Using ResponseException directly here for a specific case.
                 }
             }
-        } catch (SQLException | DataAccessException e) {
-            throw new DataAccessException("Failed to create game: " + e.getMessage());
+        } catch (SQLException e) {
+            handleSQLException(e);
         }
+        throw new ResponseException(500, "Internal Server Error: Unable to create game");
     }
+
 
     public void joinGame(String color, int gameID, String authToken) throws ResponseException {
         Gson gson = new Gson();
         String getGameSql = "SELECT gameData FROM gameIdToGame WHERE gameId = ?";
+        GameData game = null;
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement getGameStmt = conn.prepareStatement(getGameSql)) {
             getGameStmt.setInt(1, gameID);
-            ResultSet rs = getGameStmt.executeQuery();
-            if (rs.next()) {
-                GameData game = gson.fromJson(rs.getString("gameData"), GameData.class);
+            try (ResultSet rs = getGameStmt.executeQuery()) {
+                if (rs.next()) {
+                    game = gson.fromJson(rs.getString("gameData"), GameData.class);
+                } else {
+                    throw new ResponseException(404, "Game not found");
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
 
-                String username = getUsernameFromAuthToken(authToken);
+        String username = getUsernameFromAuthToken(authToken);
+
+        if (game != null) {
+            try {
                 game.addParticipant(color, username);
 
                 String updateGameSql = "UPDATE gameIdToGame SET gameData = ? WHERE gameId = ?";
-                try (PreparedStatement updateGameStmt = conn.prepareStatement(updateGameSql)) {
+                try (Connection conn = DatabaseManager.getConnection();
+                     PreparedStatement updateGameStmt = conn.prepareStatement(updateGameSql)) {
                     updateGameStmt.setString(1, gson.toJson(game));
                     updateGameStmt.setInt(2, gameID);
                     updateGameStmt.executeUpdate();
                 }
+            } catch (SQLException e) {
+                handleSQLException(e);
             }
-        } catch (SQLException | ResponseException e) {
-            throw new ResponseException("Failed to join game: " + e.getMessage());
         }
     }
 
+
     @Override
     public void clear() throws ResponseException {
+        // SQL statements to clear each table
+        String clearUsersSql = "DELETE FROM users";
+        String clearGamesSql = "DELETE FROM gameIdToGame";
+        String clearAuthTokensSql = "DELETE FROM authTokenToUsername";
 
+        try (Connection conn = DatabaseManager.getConnection()) {
+            // Clear users
+            try (PreparedStatement clearUsersStmt = conn.prepareStatement(clearUsersSql)) {
+                clearUsersStmt.executeUpdate();
+            }
+
+            // Clear games
+            try (PreparedStatement clearGamesStmt = conn.prepareStatement(clearGamesSql)) {
+                clearGamesStmt.executeUpdate();
+            }
+
+            // Clear auth tokens
+            try (PreparedStatement clearAuthTokensStmt = conn.prepareStatement(clearAuthTokensSql)) {
+                clearAuthTokensStmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
     }
+
+
     private void handleSQLException(SQLException e) throws ResponseException {
-        // Example of mapping SQL exceptions to ResponseException with appropriate status codes
         switch (e.getErrorCode()) {
             case 1045: // Access denied
                 throw new ResponseException(403, "Database access denied: " + e.getMessage());
             case 1062: // Duplicate entry for a primary key
                 throw new ResponseException(409, "Data already exists: " + e.getMessage());
-                // Add cases for other SQL error codes as needed
             default:
-                // Log unexpected errors and throw a generic ResponseException
                 System.err.println("Unexpected SQL Error Code: " + e.getErrorCode() + " - " + e.getMessage());
                 throw new ResponseException(500, "Internal Server Error: " + e.getMessage());
         }
     }
-    public void someDatabaseOperation() throws ResponseException {
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("YOUR_SQL_QUERY_HERE")) {
-            // Execute SQL statement
-        } catch (SQLException | DataAccessException e) {
-            handleSQLException((SQLException) e);
-        }
-    }
-    // Helper method to get username from auth token
-    private String getUsernameFromAuthToken(String authToken) throws DataAccessException {
+
+
+    private String getUsernameFromAuthToken(String authToken) throws ResponseException {
         String getUsernameSql = "SELECT username FROM authTokenToUsername WHERE authToken = ?";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(getUsernameSql)) {
             stmt.setString(1, authToken);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("username");
-            } else {
-                throw new DataAccessException("Auth token not found");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("username");
+                } else {
+                    throw new ResponseException(404, "Auth token not found");
+                }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to retrieve username: " + e.getMessage());
+            handleSQLException(e);
         }
+
+        throw new ResponseException(500, "Unexpected error retrieving username");
     }
+
 
 
     private static final String[] createStatements = {
@@ -254,16 +298,16 @@ public class MySqlDataAccess implements DataAccess {
             )
             """
     };
-    private void configureDatabase() throws DataAccessException {
+    private void configureDatabase() throws ResponseException {
         DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            for (String statement : createStatements) {
+                try (PreparedStatement preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+            handleSQLException(ex);
         }
     }
 }

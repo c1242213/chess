@@ -1,15 +1,15 @@
 package exception;
 
 public class ResponseException extends Exception {
-//    final private int statusCode;
+    final private int statusCode;
 
-    public ResponseException(String message) {
+    public ResponseException(int statusCode, String message) {
         super(message);
-//        this.statusCode = statusCode;
-//    }
-//
-//    public int StatusCode() {
-//        return statusCode;
-//    }
+        this.statusCode = statusCode;
     }
+
+    public int StatusCode() {
+        return statusCode;
+    }
+
 }
