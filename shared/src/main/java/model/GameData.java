@@ -48,4 +48,9 @@ public class GameData {
         this.gameID = gameID;
     }
 
+    public void setGameName(String gameName) {
+    }
+
+    public void addParticipant(String color, String username) {
+    }
 }

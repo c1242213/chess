@@ -39,7 +39,7 @@ public class MemoryDataAccess implements DataAccess{
         return authData;
     }
 
-    public AuthData login(UserData userData) throws ResponseException {
+    public AuthData login(UserData userData) throws ResponseException{
         if(users.containsKey(userData.getUsername())) {
             if (userData.getUsername() == null) {
                 throw new ResponseException(401, "Error: Unauthorized");

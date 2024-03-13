@@ -13,7 +13,7 @@ import dataAccess.MySqlDataAccess;
 
 
 public class Service {
-    private DataAccess dataAccess = new MySQLDataAccess();
+    private DataAccess dataAccess = new MySqlDataAccess();
 
 
 
