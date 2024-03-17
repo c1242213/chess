@@ -5,15 +5,15 @@ import java.util.Collection;
 import dataAccess.DataAccess;
 import dataAccess.MemoryDataAccess;
 
+import dataAccess.MySQLDataAccess;
 import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import dataAccess.MySqlDataAccess;
 
 
 public class Service {
-    private DataAccess dataAccess = new MySqlDataAccess();
+    private DataAccess dataAccess = new MySQLDataAccess();
 
 
 

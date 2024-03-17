@@ -21,4 +21,7 @@ public class AuthData {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public void setAuthToken(String authToken) {
+    }
 }
