@@ -1,7 +1,6 @@
 package exception;
 
 import com.google.gson.Gson;
-import exception.ResponseException;
 import spark.Response;
 
 import java.util.HashMap;
