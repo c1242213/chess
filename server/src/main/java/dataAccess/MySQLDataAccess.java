@@ -3,7 +3,6 @@ package dataAccess;
 
 import java.sql.*;
 import java.util.HashSet;
-import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -52,20 +51,13 @@ public class MySQLDataAccess implements DataAccess {
     }
 
     public AuthData login(UserData userData) throws ResponseException {
-        //Get the user from the database
-        try {
-            if(getUser(userData.getUsername()) == null){
-                throw new ResponseException(401, "Error: Unauthorized");
-            }
-        } catch (SQLException | DataAccessException e) {
-            throw new ResponseException(500, "Error: Internal Server Error");
-        }
-        //Check if the user is valid
+
         try {
             if (!validateUser(userData)){
                 throw new ResponseException(401, "Error: Unauthorized");
             }
         } catch (SQLException | DataAccessException e) {
+            e.printStackTrace();
             throw new ResponseException(500, "Error: Internal Server Error");
         }
         //Create a new auth token
@@ -73,17 +65,40 @@ public class MySQLDataAccess implements DataAccess {
         try {
             authToken = createAuth(userData.getUsername());
         } catch (SQLException | DataAccessException e) {
+            e.printStackTrace();
             throw new ResponseException(500, "Error: Internal Server Error");
         }
         return authToken;
     }
+    private Boolean validateUser(UserData userData) throws SQLException, DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            String sql = "SELECT password FROM userdata WHERE username = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, userData.getUsername());
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String storedHashedPassword = rs.getString("password");
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                return encoder.matches(userData.getPassword(), storedHashedPassword);
+            } else {
+                return false;
+            }
+        }
+        catch (SQLException | DataAccessException e) {
+            return false;
+        }
+    }
+
 
     public void logout(String authToken) throws ResponseException {
         //Check if the auth token is valid
         try {
-            if (getAuth(authToken) == null){
+            //if (getAuth(authToken) == null){
+            if (!validateAuth(authToken)) {
                 throw new ResponseException(401, "Error: Unauthorized");
             }
+
         } catch (SQLException | DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
@@ -96,7 +111,7 @@ public class MySQLDataAccess implements DataAccess {
     }
 
     public HashSet<GameData> listGames(String authToken) throws ResponseException {
-        //Check if the auth token is valid
+//        //Check if the auth token is valid
         try {
             if (!validateAuth(authToken)){
                 throw new ResponseException(401, "Error: Unauthorized");
@@ -104,12 +119,43 @@ public class MySQLDataAccess implements DataAccess {
         } catch (SQLException | DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
-        //Return the list of games
+
         try {
             return getGames();
         } catch (SQLException | DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
+    }
+
+    private HashSet<GameData> getGames() throws SQLException, DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            String sql = "SELECT * FROM gamedata";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            HashSet<GameData> games = new HashSet<>();
+            while (rs.next()) {
+                String gameJson = rs.getString("game");
+                ChessGame game = convertJsonToChessGame(gameJson);
+                games.add(new GameData(rs.getInt("gameId"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), game));
+            }
+            return games;
+        }
+    }
+
+    private GameData readGame(ResultSet rs) throws SQLException {
+        GameData user = new GameData();
+        var gameID = rs.getInt("gameID");
+        var whiteUser = rs.getString("whiteUser");
+        var blackUser = rs.getString("blackUser");
+        var gameName = rs.getString("gameName");
+        String gameJSON = rs.getString("game");
+        ChessGame game = new Gson().fromJson(gameJSON, ChessGame.class);
+        user.setGameID(gameID);
+        user.setGameName(gameName);
+        user.setWhiteName(whiteUser);
+        user.setBlackName(blackUser);
+        user.setGame(game);
+        return user;
     }
 
     public int createGame(String authToken, String gameName) throws ResponseException {
@@ -123,15 +169,44 @@ public class MySQLDataAccess implements DataAccess {
         }
         //Create a new game
         try {
-            GameData newGame = generateGame(authToken, gameName);
+            GameData newGame = generateGame(gameName);
             return newGame.getGameID();
         } catch (SQLException | DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
     }
 
-    public void joinGame(String clientColor, int gameID, String authToken) throws ResponseException {
-        //Check if the auth token is valid
+    private GameData generateGame(String gameName) throws SQLException, DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            String sql = "SELECT * FROM gamedata";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            int gameID = 0;
+            while (rs.next()) {
+                int currentGameId = rs.getInt("gameId");
+                if (currentGameId > gameID) {
+                    gameID = currentGameId;
+                }
+            }
+            gameID++;
+            ChessGame game = new ChessGame();
+            GameData newGame = new GameData(gameID, null, null, gameName, game);
+            String gameJson = new Gson().toJson(game);
+            try (Connection conn2 = DatabaseManager.getConnection()) {
+                String sql2 = "INSERT INTO gamedata (gameID, gameName, game) VALUES (?, ?, ?)";
+                PreparedStatement stmt2 = conn2.prepareStatement(sql2);
+                stmt2.setInt(1, gameID);
+                stmt2.setString(2, gameName);
+                stmt2.setString(3, gameJson);
+                stmt2.executeUpdate();
+            }
+
+            return newGame;
+        }
+    }
+
+    public void joinGame(String color, int gameID, String authToken) throws ResponseException {
+
         try {
             if (!validateAuth(authToken)){
                 throw new ResponseException(401, "Error: Unauthorized");
@@ -139,17 +214,17 @@ public class MySQLDataAccess implements DataAccess {
         } catch (SQLException | DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
-        //Check if the game is valid
+
         try {
-            if (!validateGame(clientColor, gameID, authToken)){
+            if (!validateGame(color, gameID, authToken)){
                 throw new ResponseException(403, "Error: Already taken");
             }
         } catch (SQLException | DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
-        //Join the game
+
         try {
-            joinGameIfValid(clientColor, gameID, authToken);
+            joinGameIfValid(color, gameID, authToken);
         } catch (SQLException | DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
@@ -164,7 +239,7 @@ public class MySQLDataAccess implements DataAccess {
     }
 
 
-    //Helper functions
+
     private UserData getUser(String username) throws SQLException, DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
             String sql = "SELECT * FROM userdata WHERE username = ?";
@@ -196,31 +271,13 @@ public class MySQLDataAccess implements DataAccess {
         return hashedPassword;
     }
 
-    private Boolean validateUser(UserData userData) throws SQLException, DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection()) {
-            String sql = "SELECT password FROM userdata WHERE username = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, userData.getUsername());
-            ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                String storedHashedPassword = rs.getString("password");
-                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-                return encoder.matches(userData.getPassword(), storedHashedPassword);
-            } else {
-                return false;
-            }
-        }
-        catch (SQLException | DataAccessException e) {
-            return false;
-        }
-    }
 
 
 private AuthData createAuth(String username) throws SQLException, DataAccessException {
     try (Connection conn = DatabaseManager.getConnection()) {
-        String authToken = UUID.randomUUID().toString();
-
+        AuthData authData = new AuthData();
+        String authToken = authData.getAuthToken();
         String sql = "INSERT INTO authdata (authToken, username) VALUES (?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, authToken);
@@ -228,8 +285,6 @@ private AuthData createAuth(String username) throws SQLException, DataAccessExce
             stmt.executeUpdate();
         }
 
-
-        AuthData authData = new AuthData();
         authData.setUsername(username);
         authData.setAuthToken(authToken);
         return authData;
@@ -263,7 +318,7 @@ private AuthData createAuth(String username) throws SQLException, DataAccessExce
 
     private boolean validateAuth(String authToken) throws SQLException, DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
-            String sql = "SELECT * FROM authdata WHERE authToken = ?";
+            String sql = "SELECT authToken FROM authdata WHERE authToken = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, authToken);
             ResultSet rs = stmt.executeQuery();
@@ -276,48 +331,8 @@ private AuthData createAuth(String username) throws SQLException, DataAccessExce
         return gson.fromJson(json, ChessGame.class);
     }
 
-    private HashSet<GameData> getGames() throws SQLException, DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection()) {
-            String sql = "SELECT * FROM gamedata";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            HashSet<GameData> games = new HashSet<>();
-            while (rs.next()) {
-                String gameJson = rs.getString("game");
-                ChessGame game = convertJsonToChessGame(gameJson);
-                games.add(new GameData(rs.getInt("gameId"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), game));
-            }
-            return games;
-        }
-    }
 
-    private GameData generateGame(String authToken, String gameName) throws SQLException, DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection()) {
-            String sql = "SELECT * FROM gamedata";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            int gameID = 0;
-            while (rs.next()) {
-                int currentGameId = rs.getInt("gameId");
-                if (currentGameId > gameID) {
-                    gameID = currentGameId;
-                }
-            }
-            gameID++;
-            ChessGame game = new ChessGame();
-            GameData newGame = new GameData(gameID, null, null, gameName, game);
-            String gameJson = new Gson().toJson(game);
-            try (Connection conn2 = DatabaseManager.getConnection()) {
-                String sql2 = "INSERT INTO gamedata (gameId, gameName, game) VALUES (?, ?, ?)";
-                PreparedStatement stmt2 = conn2.prepareStatement(sql2);
-                stmt2.setInt(1, gameID);
-                stmt2.setString(2, gameName);
-                stmt2.setString(3, gameJson);
-                stmt2.executeUpdate();
-            }
-            return newGame;
-        }
-    }
+
 
     private boolean validateGame(String clientColor, int gameID, String authToken) throws SQLException, DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
@@ -344,14 +359,6 @@ private AuthData createAuth(String username) throws SQLException, DataAccessExce
     }
 
     private void joinGameIfValid(String color, int gameID, String authToken) throws SQLException, DataAccessException {
-//        try (Connection conn = DatabaseManager.getConnection()) {
-//           String sql = "INSERT INTO gamelists (gameId, username) VALUES (?, ?)";
-//            PreparedStatement stmt = conn.prepareStatement(sql);
-//            stmt.setInt(1, gameID);
-//            stmt.setString(2, getAuth(authToken).getUsername());
-//            stmt.executeUpdate();
-//        }
-
         if (color == null) {
             return;
         }
@@ -402,8 +409,8 @@ private AuthData createAuth(String username) throws SQLException, DataAccessExce
             )""","""
             CREATE TABLE IF NOT EXISTS  gamedata (
                 `gameId` int PRIMARY KEY NOT NULL,
-                `whiteUsername` varchar(255),
-                `blackUsername` varchar(255),
+                `whiteUsername` varchar(255) DEFAULT NULL,
+                `blackUsername` varchar(255) DEFAULT NULL,
                 `gameName` varchar(255) NOT NULL,
                 `game` BLOB DEFAULT NULL
             )""","""
@@ -414,11 +421,6 @@ private AuthData createAuth(String username) throws SQLException, DataAccessExce
             )
             """
     };
-//String[] createStatements = {
-//        "CREATE TABLE IF NOT EXISTS userdata (id int PRIMARY KEY AUTO_INCREMENT, username varchar(255) UNIQUE NOT NULL, password varchar(255) NOT NULL, email varchar(255))",
-//        "CREATE TABLE IF NOT EXISTS authdata (authID varchar(255) PRIMARY KEY NOT NULL, username varchar(255) NOT NULL, timestamp datetime, FOREIGN KEY (username) REFERENCES userdata (username))",
-//        "CREATE TABLE IF NOT EXISTS gamedata (gameId int PRIMARY KEY NOT NULL, whiteUsername varchar(255), blackUsername varchar(255), gameName varchar(255) NOT NULL, game JSON)",
-//};
     private void configureDatabase() throws ResponseException, DataAccessException {
         DatabaseManager.createDatabase();
         try (Connection conn = DatabaseManager.getConnection()) {
@@ -443,3 +445,4 @@ private AuthData createAuth(String username) throws SQLException, DataAccessExce
         }
     }
 }
+

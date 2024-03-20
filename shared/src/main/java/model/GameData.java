@@ -53,4 +53,13 @@ public class GameData {
 
     public void addParticipant(String color, String username) {
     }
+
+    public void setBlackName(String blackUser) {
+    }
+
+    public void setWhiteName(String whiteUser) {
+    }
+
+    public void setGame(ChessGame game) {
+    }
 }

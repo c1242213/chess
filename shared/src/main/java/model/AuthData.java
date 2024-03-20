@@ -24,4 +24,7 @@ public class AuthData {
 
     public void setAuthToken(String authToken) {
     }
+
+    public void setAuthID(String authID) {
+    }
 }

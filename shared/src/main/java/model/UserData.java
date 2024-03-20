@@ -25,4 +25,5 @@ public class UserData {
     public String getEmail() {
         return email;
     }
+
 }
