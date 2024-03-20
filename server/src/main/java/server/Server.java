@@ -1,11 +1,10 @@
 package server;
 import com.google.gson.Gson;
-import exception.ErrorHandle;
+import dataAccess.ErrorHandle;
 import exception.ResponseException;
 import model.UserData;
 import model.GameData;
 //import server.websocket.WebSocketHandler;
-import org.eclipse.jetty.server.handler.ErrorHandler;
 import service.Service;
 import spark.*;
 
