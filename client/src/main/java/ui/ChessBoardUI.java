@@ -13,108 +13,80 @@ public class ChessBoardUI {
         drawBoard(out);
 
         out.print(SET_BG_COLOR_DARK_GREY);
-        out.print(SET_TEXT_COLOR_BLACK);
     }
 
     public static void drawBoard(PrintStream out) {
-
-        for(int i = 0; i <= 16; i++) {
-            if(i%2 == 1) {
-                border(out);
-                out.println();
-                checkeredRowWhite(out);
-                out.println();
-                checkeredRowWhite(out);
-            }else{
-                if(i == 8){
-                    out.println();
-                    border(out);
-                    out.println();
-                    border(out);
-                }
-                else {
-                    border(out);
-                    out.println();
-                    checkeredRowBlack(out);
-                    out.println();
-                    checkeredRowBlack(out);
-                }
-            }
+        letterBorder(out, new String[]{" h ", " g ", " f ", " e ", " d ", " c ", " b ", " a "});
+        rowChecker(out, new String[]{" 1 ", " 2 ",  " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "});
+        out.println();
+        letterBorder(out, new String[]{" h ", " g ", " f ", " e ", " d ", " c ", " b ", " a "});
+        out.println();
+        for(int i = 0; i < 10; i++){
+            out.print(SET_BG_COLOR_BLACK);
+            System.out.print(EMPTY.repeat(1));
 
         }
+        out.print(SET_BG_COLOR_DARK_GREY);
         out.println();
-
-
+        letterBorder(out, new String[]{" a ", " b ", " c ", " d ", " e ", " f ", " g ", " h "});
+        rowChecker(out, new String[] {" 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 "});
+        out.println();
+        letterBorder(out, new String[]{" a ", " b ", " c ", " d ", " e ", " f ", " g ", " h "});
+    }
+    public static void rowChecker(PrintStream out, String[] string){
+        int counter = 0;
+        for (int i = 0; i <= 7; i++) {
+            if (i % 2 == 1) {
+                out.println();
+                checkeredRowWhite(out, counter, string);
+            } else {
+                out.println();
+                checkeredRowBlack(out, counter, string);
+            }
+            counter++;
+        }
 
     }
-    public static void border(PrintStream out){
-        for(int i = 0; i< 18; i++){
+
+    public static void letterBorder(PrintStream out, String[] string){
+        out.print(SET_BG_COLOR_GREEN);
+        System.out.print(EMPTY.repeat(1));
+        for(int i = 0; i< 8; i++){
             out.print(SET_BG_COLOR_GREEN);
+            System.out.print(string[i]);
+        }
+        out.print(SET_BG_COLOR_GREEN);
+        System.out.print(EMPTY.repeat(1));
+        out.print(SET_BG_COLOR_DARK_GREY);
+
+    }
+
+    public static void checkeredRowBlack(PrintStream out, int counter, String[] string){
+        printRows(out, SET_BG_COLOR_BLACK, SET_BG_COLOR_WHITE, counter, string);
+
+    }
+
+    public static void checkeredRowWhite(PrintStream out, int counter, String[] string){
+        printRows(out, SET_BG_COLOR_WHITE, SET_BG_COLOR_BLACK, counter, string);
+
+    }
+
+    private static void printRows(PrintStream out, String setBgColorWhite, String setBgColorBlack, int counter, String[] string) {
+        for (int row = 0; row < 4; row++) {
+            if(row == 0){
+                numberBorder(out, counter, string);
+            }
+            out.print(setBgColorBlack);
+            System.out.print(EMPTY.repeat(1));
+            out.print(setBgColorWhite);
             System.out.print(EMPTY.repeat(1));
         }
+        numberBorder(out, counter, string);
         out.print(SET_BG_COLOR_DARK_GREY);
-
     }
 
-//    public static void checkeredRow(PrintStream out, int i ) {
-//        for (int row = 0; row < 6; row++) {
-//
-//            if (row == 0 || row == 5) {
-//                out.print(SET_BG_COLOR_GREEN);
-//                System.out.print(EMPTY.repeat(1));
-//            } else {
-//                if(i%2 == 0) {
-//                        out.print(SET_BG_COLOR_BLACK);
-//                        System.out.print(EMPTY.repeat(2));
-//                        out.print(SET_BG_COLOR_WHITE);
-//                        System.out.print(EMPTY.repeat(2));
-//                        out.println();
-//                }
-//                else {
-//                        out.print(SET_BG_COLOR_WHITE);
-//                        System.out.print(EMPTY.repeat(2));
-//                        out.print(SET_BG_COLOR_BLACK);
-//
-//                    out.println();
-//                }
-//                System.out.print(EMPTY.repeat(2));
-//                out.println();
-//            }
-//
-//        }
-//        out.print(SET_BG_COLOR_DARK_GREY);
-//
-//    }
-    public static void checkeredRowBlack(PrintStream out){
-        for (int row = 0; row < 6; row++) {
-
-            if (row == 0 || row == 5) {
-                out.print(SET_BG_COLOR_GREEN);
-                System.out.print(EMPTY.repeat(1));
-            }else{
-                out.print(SET_BG_COLOR_BLACK);
-                System.out.print(EMPTY.repeat(2));
-                out.print(SET_BG_COLOR_WHITE);
-                System.out.print(EMPTY.repeat(2));
-            }
-        }
-        out.print(SET_BG_COLOR_DARK_GREY);
-
-    }
-    public static void checkeredRowWhite(PrintStream out){
-        for (int row = 0; row < 6; row++) {
-
-            if (row == 0 || row == 5) {
-                out.print(SET_BG_COLOR_GREEN);
-                System.out.print(EMPTY.repeat(1));
-            }else{
-                out.print(SET_BG_COLOR_WHITE);
-                System.out.print(EMPTY.repeat(2));
-                out.print(SET_BG_COLOR_BLACK);
-                System.out.print(EMPTY.repeat(2));
-            }
-        }
-        out.print(SET_BG_COLOR_DARK_GREY);
-
+    private static void numberBorder(PrintStream out, int counter, String[] string){
+        out.print(SET_BG_COLOR_GREEN);
+        System.out.print(string[counter]);
     }
 }
