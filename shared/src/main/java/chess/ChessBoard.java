@@ -9,6 +9,7 @@ import java.util.Arrays;
  * signature of the existing methods.
  */
 public class ChessBoard {
+
     private ChessPiece[][] squares = new ChessPiece[8][8];
 
     public ChessBoard() {
@@ -36,11 +37,15 @@ public class ChessBoard {
         return squares[position.getRow()-1][position.getColumn()-1];
 
     }
+    public ChessPiece[][] getBoard(){
+        return squares;
+    }
 
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
+
 
     public void resetBoard() {
         ChessPiece[][] newSquare = new ChessPiece[8][8];
