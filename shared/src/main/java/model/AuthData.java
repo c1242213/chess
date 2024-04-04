@@ -3,6 +3,7 @@ package model;
 import java.util.UUID;
 
 public class AuthData {
+//    public String getAuthToken;
     String authToken;
     String username;
 
@@ -25,6 +26,4 @@ public class AuthData {
     public void setAuthToken(String authToken) {
     }
 
-    public void setAuthID(String authID) {
-    }
 }

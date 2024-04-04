@@ -19,26 +19,32 @@ public class ServerFacade {
     }
 
 
-    public AuthData registerUser(String username, String password, String email) throws ResponseException, URISyntaxException {
+    public AuthData register(UserData userData) throws ResponseException, URISyntaxException {
         var path = "/user";
+        String username = userData.getUsername();
+        String password = userData.getPassword();
+        String email = userData.getEmail();
         var request = new UserData(username, password, email);
         return this.makeRequest("POST", path, request, AuthData.class, null);
     }
 
-    public AuthData loginUser(String username, String password) throws ResponseException, URISyntaxException {
+    public AuthData login(UserData userData) throws ResponseException, URISyntaxException {
         var path = "/session";
+        String username = userData.getUsername();
+        String password = userData.getPassword();
         var request = new UserData(username, password, null);
         return this.makeRequest("POST", path, request, AuthData.class, null);
     }
 
-    public void logoutUser(String token) throws ResponseException, URISyntaxException {
+    public void logout(String token) throws ResponseException, URISyntaxException {
         var path = "/session";
         this.makeRequest("DELETE", path, null, null, token);
     }
 
-    public ListGameData listGames(String token) throws ResponseException, URISyntaxException {
+    public ListGameData listGames(AuthData authData) throws ResponseException, URISyntaxException {
+        String authToken = authData.getAuthToken();
         var path = "/game";
-        return this.makeRequest("GET", path, null, ListGameData.class, token);
+        return this.makeRequest("GET", path, null, ListGameData.class, authToken);
     }
 
     public GameData createGame(String token, String gameName) throws ResponseException, URISyntaxException {
@@ -53,11 +59,6 @@ public class ServerFacade {
         return this.makeRequest("PUT", path, request, GameData.class, token);
     }
 
-//    public void clear() throws ResponseException {
-//        var path = "/db";
-//        var request = new
-//        this.makeRequest("DELETE", path, null, null, null, );
-//    }
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException, URISyntaxException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();

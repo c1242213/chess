@@ -1,6 +1,7 @@
 package service;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import dataAccess.DataAccess;
 import dataAccess.MemoryDataAccess;
@@ -47,7 +48,7 @@ public class Service {
     }
 
     //game
-    public Collection<GameData> listGames(String authToken) throws ResponseException {
+    public HashSet<GameData> listGames(String authToken) throws ResponseException {
         if (authToken == null || authToken.isEmpty()) {
             throw new ResponseException(400, "Error: Bad Request");
         }

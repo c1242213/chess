@@ -18,22 +18,17 @@ public class MemoryDataAccess implements DataAccess{
 
     public AuthData register(UserData userData) throws ResponseException {
 
-        // First, check if the username is null or empty
         if (userData.getUsername() == null || userData.getUsername().isEmpty()) {
             throw new ResponseException(401, "Error: Username cannot be null or empty");
         }
 
-        // Then, check if the user already exists
         if(users.containsKey(userData.getUsername())) {
             throw new ResponseException(403, "Error: User already exists");
         }
 
-        // Create and store the AuthData object
         AuthData authData = new AuthData();
         authData.setUsername(userData.getUsername());
         authTokens.put(authData.getAuthToken(), authData);
-
-        // Assuming you also want to store the UserData object
         users.put(userData.getUsername(), userData);
 
         return authData;
@@ -45,14 +40,12 @@ public class MemoryDataAccess implements DataAccess{
                 throw new ResponseException(401, "Error: Unauthorized");
             }
         }
-        //Check user
         var user = getUser(userData.getUsername());
         if (user == null || !user.getPassword().equals(userData.getPassword())){
             throw new ResponseException(401, "Error: Unauthorized");
         }
         AuthData authData = new AuthData();
         authData.setUsername(userData.getUsername());
-        // Store the AuthData object using the authToken as the key
         authTokens.put(authData.getAuthToken(), authData);
 
         return authData;
@@ -64,12 +57,10 @@ public class MemoryDataAccess implements DataAccess{
             throw new ResponseException(401, "Error: Unauthorized - Token is invalid");
         }
 
-        // Then, check if the authToken exists in the map
         if (!authTokens.containsKey(authToken)) {
             throw new ResponseException(401, "Error: Unauthorized - Token does not exist");
         }
 
-        // If the checks pass, remove the auth token from the map
         authTokens.remove(authToken);
     }
 
@@ -78,22 +69,18 @@ public class MemoryDataAccess implements DataAccess{
         if (!authTokens.containsKey(authToken)){
             throw new ResponseException(401, "Error: Unauthorized");
         }
-        //Return the list of games
         return new HashSet<GameData>(games.values());
     }
 
     public int createGame(String authToken, String gameName) throws ResponseException {
-        //Check auth token
         if (!authTokens.containsKey(authToken)){
             throw new ResponseException(401, "Error: Unauthorized");
         }
-        //Create a new game
         GameData game = newGame(gameName);
         return game.getGameID();
     }
 
     public void joinGame(String color, int gameID, String authToken) throws ResponseException {
-        //Check auth token
         if (!authTokens.containsKey(authToken)){
             throw new ResponseException(401, "Error: Unauthorized");
         }

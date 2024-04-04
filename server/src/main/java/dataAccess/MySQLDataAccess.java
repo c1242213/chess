@@ -142,24 +142,8 @@ public class MySQLDataAccess implements DataAccess {
         }
     }
 
-    private GameData readGame(ResultSet rs) throws SQLException {
-        GameData user = new GameData();
-        var gameID = rs.getInt("gameID");
-        var whiteUser = rs.getString("whiteUser");
-        var blackUser = rs.getString("blackUser");
-        var gameName = rs.getString("gameName");
-        String gameJSON = rs.getString("game");
-        ChessGame game = new Gson().fromJson(gameJSON, ChessGame.class);
-        user.setGameID(gameID);
-        user.setGameName(gameName);
-        user.setWhiteName(whiteUser);
-        user.setBlackName(blackUser);
-        user.setGame(game);
-        return user;
-    }
 
     public int createGame(String authToken, String gameName) throws ResponseException {
-        //Check if the auth token is valid
         try {
             if (!validateAuth(authToken)){
                 throw new ResponseException(401, "Error: Unauthorized");
@@ -167,7 +151,6 @@ public class MySQLDataAccess implements DataAccess {
         } catch (SQLException | DataAccessException e) {
             throw new ResponseException(500, "Error: Internal Server Error");
         }
-        //Create a new game
         try {
             GameData newGame = generateGame(gameName);
             return newGame.getGameID();

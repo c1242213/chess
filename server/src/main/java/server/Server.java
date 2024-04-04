@@ -2,6 +2,7 @@ package server;
 import com.google.gson.Gson;
 import dataAccess.ErrorHandle;
 import exception.ResponseException;
+import model.ListGameData;
 import model.UserData;
 import model.GameData;
 //import server.websocket.WebSocketHandler;
@@ -80,9 +81,11 @@ public class Server {
     public Object listGames(Request req, Response res) {
         try {
             var games = service.listGames(req.headers("Authorization"));
-            Map<String, Object> response = new HashMap<>();
-            response.put("games", games);
-            return new Gson().toJson(response);
+            ListGameData listGameData = new ListGameData(games);
+            return new Gson().toJson(listGameData);
+//            Map<String, Object> response = new HashMap<>();
+//            response.put("games", games);
+//            return new Gson().toJson(response);
         } catch (Exception e) {
             return ErrorHandle.handleException(e, res);
         }
