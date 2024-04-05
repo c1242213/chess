@@ -36,7 +36,7 @@ public class ServerFacadeTests {
 
         try {
             AuthData authData = serverFacade.register(userData);
-            assertNotNull(authData.getAuthToken());
+            Assertions.assertNotNull(authData.getAuthToken());
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -59,7 +59,7 @@ public class ServerFacadeTests {
         UserData userData = new UserData("usernam", "password", "email.com");
         try {
             AuthData authData = serverFacade.login(userData);
-            assertNotNull(authData.getAuthToken());
+            Assertions.assertNotNull(authData.getAuthToken());
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -82,10 +82,10 @@ public class ServerFacadeTests {
         try {
             UserData userData = new UserData("usernae", "password", "email.com");
             AuthData authData = serverFacade.register(userData);
-            assertNotNull(authData);
+            Assertions.assertNotNull(authData);
 
             serverFacade.logout(authData.getAuthToken());
-            assertNull(userData.getUsername());
+            Assertions.assertNull(userData.getUsername());
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -97,10 +97,10 @@ public class ServerFacadeTests {
         try {
             UserData userData = new UserData("sername", "password", "email.com");
             AuthData authData = serverFacade.register(userData);
-            assertNotNull(authData);
+            Assertions.assertNotNull(authData);
 
             serverFacade.logout(authData.getAuthToken());
-            assertNotNull(userData.getUsername());
+            Assertions.assertNotNull(userData.getUsername());
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -111,7 +111,7 @@ public class ServerFacadeTests {
         try {
             UserData userData = new UserData("usernme", "password", "email.com");
             AuthData authData = serverFacade.register(userData);
-            assertNotNull(authData);
+            Assertions.assertNotNull(authData);
 
             serverFacade.createGame(authData.getAuthToken(), "GameName");
             ListGameData games = serverFacade.listGames(authData);
@@ -127,7 +127,7 @@ public class ServerFacadeTests {
         try {
             UserData userData = new UserData("userame", "password", "email.com");
             AuthData authData = serverFacade.register(userData);
-            assertNotNull(authData);
+            Assertions.assertNotNull(authData);
 
             serverFacade.createGame(authData.getAuthToken(), "GameName");
             Assertions.fail("Throw Exception");
@@ -142,7 +142,7 @@ public class ServerFacadeTests {
         try{
             UserData userData = new UserData("usename", "password", "email.com");
             AuthData authData = serverFacade.register(userData);
-            assertNotNull(authData);
+            Assertions.assertNotNull(authData);
 
             serverFacade.createGame(authData.getAuthToken(), "BoB");
             serverFacade.createGame(authData.getAuthToken(), "swim");
@@ -158,7 +158,7 @@ public class ServerFacadeTests {
         try{
             UserData userData = new UserData("name", "password", "email.com");
             AuthData authData = serverFacade.register(userData);
-            assertNotNull(authData);
+            Assertions.assertNotNull(authData);
 
             serverFacade.createGame(authData.getAuthToken(), "What");
             serverFacade.createGame(authData.getAuthToken(), "Rob");
@@ -175,7 +175,7 @@ public class ServerFacadeTests {
         try {
             UserData userData = new UserData("user", "password", "email.com");
             AuthData authData = serverFacade.register(userData);
-            assertNotNull(authData);
+            Assertions.assertNotNull(authData);
 
             GameData game = serverFacade.createGame(authData.getAuthToken(), "no");
             ListGameData games = serverFacade.listGames(authData);
@@ -193,7 +193,7 @@ public class ServerFacadeTests {
         try {
             UserData userData = new UserData("use", "password", "email.com");
             AuthData authData = serverFacade.register(userData);
-            assertNotNull(authData);
+            Assertions.assertNotNull(authData);
 
             GameData game = serverFacade.createGame(authData.getAuthToken(), "no");
             ListGameData games = serverFacade.listGames(authData);
