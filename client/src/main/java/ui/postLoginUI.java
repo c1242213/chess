@@ -1,14 +1,9 @@
 package ui;
 
-import chess.ChessGame;
 import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
-import model.JoinData;
-import model.ListGameData;
-import server.Server;
 
-import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Scanner;
