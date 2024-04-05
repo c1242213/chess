@@ -9,15 +9,13 @@ import java.util.Scanner;
 
 public class preLoginUI {
     private static boolean logIn = false;
-    private static ServerFacade server = null;
+    private static ServerFacade server;
     private static AuthData authData;
 
-    private String serverUrl;
 
 
     public preLoginUI(String serverUrl) {
             server = new ServerFacade(serverUrl);
-            this.serverUrl = serverUrl;
     }
 
 

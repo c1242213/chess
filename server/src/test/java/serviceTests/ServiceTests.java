@@ -50,12 +50,10 @@ public class ServiceTests {
     @Test
     public void testLoginSuccessful() throws ResponseException {
         UserData userData = new UserData("username", "password", "bob@gmail.com");
-        // Register the user first
         service.register(userData);
         try {
             AuthData authData = service.login(userData);
             Assertions.assertNotNull(authData);
-            // Add more assertions if needed
         } catch (ResponseException e) {
             Assertions.fail("Unexpected exception: " + e.getMessage());
         }

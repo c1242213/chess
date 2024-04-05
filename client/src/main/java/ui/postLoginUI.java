@@ -8,6 +8,7 @@ import model.JoinData;
 import model.ListGameData;
 import server.Server;
 
+import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Scanner;
@@ -27,7 +28,7 @@ public class postLoginUI {
 
     }
 
-    static void postLoginMenu(AuthData authData, ServerFacade server) throws ResponseException, URISyntaxException {
+    public static void postLoginMenu(AuthData authData, ServerFacade server) throws ResponseException, URISyntaxException {
         Scanner scanner = new Scanner(System.in);
         printPostLogin();
         String input = scanner.nextLine();
@@ -109,13 +110,14 @@ public class postLoginUI {
                 if (Objects.equals(color, "2")) {
                     server.joinGame(authData.getAuthToken(), id, "Black");
                 } else {
-                    server.joinGame(authData.getAuthToken(), id, "null");
+                    server.joinGame(authData.getAuthToken(), id, null);
                 }
             }
         } catch (NumberFormatException | ResponseException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
-        
+        ChessBoardUI.main(new String[0]);
+
 
     }
 

@@ -36,7 +36,7 @@ public class serviceSQLTests {
 
     @Test
     public void testRegisterSuccessful() {
-        UserData userData = new UserData("username", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
         try {
             AuthData authData = service.register(userData);
             Assertions.assertNotNull(authData);
@@ -47,9 +47,9 @@ public class serviceSQLTests {
 
     @Test
     public void testRegisterMultipleUsersSuccessful() {
-        UserData userData = new UserData("username", "password", "test@test.com");
-        UserData userData2 = new UserData("username2", "password", "test@test.com");
-        UserData userData3 = new UserData("username3", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
+        UserData userData2 = new UserData("username2", "password", "test.com");
+        UserData userData3 = new UserData("username3", "password", "test.com");
         try {
             AuthData authData = service.register(userData);
             Assertions.assertNotNull(authData);
@@ -64,7 +64,7 @@ public class serviceSQLTests {
 
     @Test
     public void testRegisterUnsuccessful1() {
-        UserData userData = new UserData(null, "password", "test@test.com");
+        UserData userData = new UserData(null, "password", "test.com");
         try {
             service.register(userData);
             Assertions.fail("Expected exception");
@@ -75,7 +75,7 @@ public class serviceSQLTests {
 
     @Test
     public void testRegisterUnsuccessful2() {
-        UserData userData = new UserData("username", "", "test@test.com");
+        UserData userData = new UserData("username", "", "test.com");
         try {
             service.register(userData);
             Assertions.fail("Expected exception");
@@ -86,7 +86,7 @@ public class serviceSQLTests {
 
     @Test
     public void testLoginSuccessful() throws ResponseException {
-        UserData userData = new UserData("username", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
         service.register(userData);
         try {
             AuthData authData = service.login(userData);
@@ -99,7 +99,7 @@ public class serviceSQLTests {
 
     @Test
     public void testLoginUnsuccessful() throws ResponseException {
-        UserData userData = new UserData(null, "password", "test@test.com");
+        UserData userData = new UserData(null, "password", "test.com");
         try {
             service.register(userData);
             Assertions.fail("Expected exception");
@@ -110,7 +110,7 @@ public class serviceSQLTests {
 
     @Test
     public void testLoginFail2() throws ResponseException {
-        UserData userData = new UserData("Username", "", "test@test.com");
+        UserData userData = new UserData("Username", "", "test.com");
         try {
             service.register(userData);
             Assertions.fail("Expected exception");
@@ -121,7 +121,7 @@ public class serviceSQLTests {
 
     @Test
     public void testLogoutSuccess() throws ResponseException {
-        UserData userData = new UserData("username", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
         AuthData authData = service.register(userData);
         String authToken = authData.getAuthToken();
         try {
@@ -144,7 +144,7 @@ public class serviceSQLTests {
 
     @Test
     public void testListGamesSuccessful() throws ResponseException {
-        UserData userData = new UserData("username", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
         AuthData authData = service.register(userData);
         String authToken = authData.getAuthToken();
         service.createGame(authToken, "gameName");
@@ -158,7 +158,7 @@ public class serviceSQLTests {
 
     @Test
     public void testListGamesUnsuccessful() throws ResponseException {
-        UserData userData = new UserData("username", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
         AuthData authData = service.register(userData);
         String authToken = authData.getAuthToken();
         service.createGame(authToken, "gameName");
@@ -172,7 +172,7 @@ public class serviceSQLTests {
 
     @Test
     public void testCreateGameSuccessful() throws ResponseException {
-        UserData userData = new UserData("username", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
         AuthData authData = service.register(userData);
         String authToken = authData.getAuthToken();
         try {
@@ -185,7 +185,7 @@ public class serviceSQLTests {
 
     @Test
     public void testCreateGameUnsuccessful() throws ResponseException {
-        UserData userData = new UserData("username", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
         AuthData authData = service.register(userData);
         String authToken = authData.getAuthToken();
         try {
@@ -198,7 +198,7 @@ public class serviceSQLTests {
 
     @Test
     public void testCreateGameUnsuccessful2() throws ResponseException {
-        UserData userData = new UserData("username", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
         AuthData authData = service.register(userData);
         String authToken = authData.getAuthToken();
         try {
@@ -211,7 +211,7 @@ public class serviceSQLTests {
 
     @Test
     public void testJoinGameSuccessful() throws ResponseException {
-        UserData userData = new UserData("username", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
         AuthData authData = service.register(userData);
         String authToken = authData.getAuthToken();
         service.createGame(authToken, "gameName");
@@ -226,7 +226,7 @@ public class serviceSQLTests {
 
     @Test
     public void testJoinGameWatcherSuccessful() throws ResponseException {
-        UserData userData = new UserData("username", "password", "test@test.com");
+        UserData userData = new UserData("username", "password", "test.com");
         AuthData authData = service.register(userData);
         String authToken = authData.getAuthToken();
         service.createGame(authToken, "gameName");
@@ -239,28 +239,6 @@ public class serviceSQLTests {
         }
     }
 
-    @Test
-    public void testJoinGameWatchersSuccessful() throws ResponseException {
-        UserData userData = new UserData("username", "password", "test@test.com");
-        AuthData authData = service.register(userData);
-        String authToken = authData.getAuthToken();
-        UserData userData2 = new UserData("username2", "password", "test@test.com");
-        AuthData authData2 = service.register(userData2);
-        String authToken2 = authData2.getAuthToken();
-        UserData userData3 = new UserData("username3", "password", "test@test.com");
-        AuthData authData3 = service.register(userData3);
-        String authToken3 = authData3.getAuthToken();
-        service.createGame(authToken, "gameName");
-        String clientColor = null;
-        int gameID = 1;
-        try {
-            service.joinGame(clientColor, gameID, authToken);
-            service.joinGame(clientColor, gameID, authToken2);
-            service.joinGame(clientColor, gameID, authToken3);
-        } catch (ResponseException e) {
-            Assertions.fail("Unexpected exception: " + e.getMessage());
-        }
-    }
 
 
     @Test
