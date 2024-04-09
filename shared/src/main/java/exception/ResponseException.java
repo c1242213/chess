@@ -12,4 +12,7 @@ public class ResponseException extends Exception {
         return statusCode;
     }
 
+    public int statusCode() {
+        return 0;
+    }
 }

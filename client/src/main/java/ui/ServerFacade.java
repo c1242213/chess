@@ -58,6 +58,29 @@ public class ServerFacade {
         var request = new JoinData(color, gameId);
         return this.makeRequest("PUT", path, request, GameData.class, token);
     }
+public void clear() throws ResponseException {
+    HttpURLConnection http = null;
+    try {
+        URL url = new URL(serverUrl + "/db");
+        http = (HttpURLConnection) url.openConnection();
+        http.setRequestMethod("DELETE");
+        http.connect();
+
+        int responseCode = http.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new ResponseException(responseCode, "Failed to clear data: HTTP response code " + responseCode);
+        } else {
+            System.out.println("Database cleared");
+        }
+    } catch (IOException ex) {
+        throw new ResponseException(-1, "Failed to clear data: " + ex.getMessage());
+    } finally {
+        if (http != null) {
+            http.disconnect();
+        }
+    }
+}
+
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException, URISyntaxException {
         try {
