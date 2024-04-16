@@ -4,7 +4,7 @@ import chess.ChessGame;
 
 public class JoinPlayerCommand extends UserGameCommand {
 
-    private String username;
+    private static String username;
     private Integer gameID;
     private ChessGame.TeamColor playerColor;
 
@@ -34,7 +34,7 @@ public class JoinPlayerCommand extends UserGameCommand {
         this.username = username;
     }
 
-    public String getUsername() {
+    public static String getUsername() {
         return username;
     }
 

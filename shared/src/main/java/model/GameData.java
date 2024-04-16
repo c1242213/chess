@@ -4,10 +4,10 @@ import chess.ChessGame;
 
 public class GameData {
     private int gameID;
-    private String whiteUsername;
-    private String blackUsername;
+    private static String whiteUsername;
+    private static String blackUsername;
     private String gameName;
-    private ChessGame game;
+    private static ChessGame game;
 
     public GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
         this.gameID = gameID;
@@ -28,11 +28,11 @@ public class GameData {
         return gameID;
     }
 
-    public String getWhiteUsername() {
+    public static String getWhiteUsername() {
         return whiteUsername;
     }
 
-    public String getBlackUsername() {
+    public static String getBlackUsername() {
         return blackUsername;
     }
 
@@ -42,7 +42,7 @@ public class GameData {
 
 
 
-    public ChessGame getGame(){return game;}
+    public static ChessGame getGame(){return game;}
 
     public void setGameID(int gameID) {
         this.gameID = gameID;

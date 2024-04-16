@@ -4,7 +4,7 @@ import chess.ChessMove;
 
 public class MakeMoveCommand extends UserGameCommand {
 
-    private ChessMove move;
+    private static ChessMove move;
     private Integer gameID;
 
     public MakeMoveCommand(String authToken) {
@@ -12,7 +12,7 @@ public class MakeMoveCommand extends UserGameCommand {
         this.commandType = CommandType.MAKE_MOVE;
     }
 
-    public ChessMove getMove() {
+    public static ChessMove getMove() {
         return move;
     }
 
