@@ -44,17 +44,15 @@ public class WebSocketHandler {
 //        }
         ChessGame.TeamColor color = action.getPlayerColor();
         ChessMove move = action.getMove();
-        ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null, null, "error");
-        session.getRemote().sendString(new Gson().toJson(serverMessage));
-//        switch (action.getCommandType()) {
-//            case JOIN_PLAYER:
-//
-//                joinPlayer(username, gameID, session, color);
-//                break;
-//            case JOIN_OBSERVER:
-//
-//                joinObserver(username, gameID, session);
-//                break;
+        switch (action.getCommandType()) {
+            case JOIN_PLAYER:
+
+                joinPlayer(username, gameID, session, color);
+                break;
+            case JOIN_OBSERVER:
+
+                joinObserver(username, gameID, session);
+                break;
 //            case MAKE_MOVE:
 //
 //                makeMove(username, move, gameID, session);
@@ -66,7 +64,10 @@ public class WebSocketHandler {
 //            case RESIGN:
 //                resignGame(username, gameID, session);
 //                break;
-//        }
+            default:
+                ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null, null, "error");
+                session.getRemote().sendString(new Gson().toJson(serverMessage));
+        }
     }
 
     public void joinPlayer(String username, int gameID, Session session, ChessGame.TeamColor playerColor) throws DataAccessException, IOException {

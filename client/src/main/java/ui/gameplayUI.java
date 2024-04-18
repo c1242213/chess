@@ -53,7 +53,7 @@ public class gameplayUI implements NotificationHandler {
         System.out.println("6. Resign");
     }
 
-    public void getcommands(Scanner scanner) throws ResponseException {
+    public void getcommands(Scanner scanner) throws ResponseException, DataAccessException {
         gameplayCommands();
         String input = scanner.next();
         switch(input) {
@@ -189,16 +189,30 @@ public class gameplayUI implements NotificationHandler {
         }
     }
     private void redraw(){
-        ChessBoardUI chessBoard = new ChessBoardUI();
-        chessBoard.drawBoard();
+        try {
+            ChessBoardUI chessBoard = new ChessBoardUI();
+//        chessBoard.drawBoard();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     private void leave() throws DataAccessException {
-        webSocket.leaveGame(authToken, gameID);
+        try {
+            webSocket.leaveGame(authToken, gameID);
 //        postLoginUI.postLoginMenu();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
-    private void resign() throws ResponseException, DataAccessException {
-        webSocket.resign(authToken, gameID);
-        preLoginUI.preLoginMenu(); //???
+    private void resign() throws DataAccessException, ResponseException {
+        try {
+            webSocket.resign(authToken, gameID);
+            preLoginUI.preLoginMenu(); //???
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        } catch (ResponseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
