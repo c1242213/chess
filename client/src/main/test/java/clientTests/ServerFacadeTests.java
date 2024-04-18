@@ -1,5 +1,6 @@
 package clientTests;
 
+import DataAccess.DataAccessException;
 import exception.ResponseException;
 import model.*;
 import org.junit.jupiter.api.*;
@@ -329,6 +330,21 @@ public class ServerFacadeTests {
             throw new RuntimeException(e);
         }
     }
+//@Test
+//public void loginBad() throws DataAccessException {
+//
+//    try {
+//        LoginRequest loginRequest = new LoginRequest();
+//        loginRequest.setUsername("bob");
+//        loginRequest.setPassword("notmypass");
+//        FinalResponse finalResponse = facade.login(loginRequest);
+//        assertNotNull(finalResponse.getMessage());
+//    }
+//    catch (Exception ex) {
+//        System.out.println(ex.getMessage());
+//    }
+//}
+
 
     @Test
     public void testLogoutUserPass() throws ResponseException {

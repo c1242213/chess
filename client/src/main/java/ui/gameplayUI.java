@@ -8,7 +8,6 @@ package ui;
 import chess.*;
 import DataAccess.DataAccessException;
 import exception.ResponseException;
-import org.eclipse.jetty.websocket.api.Session;
 import webSocket.NotificationHandler;
 import webSocket.WebSocketFacade;
 import webSocketMessages.serverMessages.ServerMessage;
