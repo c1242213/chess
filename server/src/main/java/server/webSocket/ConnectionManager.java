@@ -16,9 +16,6 @@ public class ConnectionManager {
         connections.put(visitorName, connection);
     }
 
-    public void remove(String visitorName) {
-        connections.remove(visitorName);
-    }
     public void broadcast(String excludeVisitorName, ServerMessage notification) throws IOException {
         Gson gson = new Gson();
         var removeList = new ArrayList<Connection>();
@@ -30,14 +27,6 @@ public class ConnectionManager {
                     } else {
                         removeList.add(c);
                     }
-//                } else {
-//                    if (c.visitorName.equals(visitorName)) {
-//                        c.send(gson.toJson(notification));
-//                    } else {
-//                        removeList.add(c);
-//                    }
-
-
             }
         }
         // Clean up any connections that were left open.
@@ -57,13 +46,6 @@ public class ConnectionManager {
                     } else {
                         removeList.add(c);
                     }
-//                } else {
-//                    if (c.visitorName.equals(visitorName)) {
-//                        c.send(gson.toJson(notification));
-//                    } else {
-//                        removeList.add(c);
-//                    }
-//                }
 
                 }
             }

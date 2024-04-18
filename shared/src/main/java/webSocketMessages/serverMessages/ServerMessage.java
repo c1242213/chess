@@ -35,13 +35,6 @@ public class ServerMessage {
         return message;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public String getaGame() {
-        return game;
-    }
 
     public ServerMessageType getServerMessageType() {
         return this.serverMessageType;

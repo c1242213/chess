@@ -85,9 +85,6 @@ public class Server {
             var games = service.listGames(req.headers("Authorization"));
             ListGameData listGameData = new ListGameData(games);
             return new Gson().toJson(listGameData);
-//            Map<String, Object> response = new HashMap<>();
-//            response.put("games", games);
-//            return new Gson().toJson(response);
         } catch (Exception e) {
             return ErrorHandle.handleException(e, res);
         }

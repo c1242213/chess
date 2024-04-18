@@ -9,10 +9,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class PostLoginUI {
-//    private ServerFacade server;
-//    public postLoginUI(){
-//        this.server = new ServerFacade(String serverURL)
-//    }
     public static void printPostLogin() {
         System.out.println();
         System.out.println("1. Create Game");

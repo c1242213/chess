@@ -115,7 +115,7 @@ public class ServerFacadeTests {
 
 
     @Test
-    public void testLogoutUserPass() throws ResponseException {
+    public void testLogoutUserPass() {
         String username = "testUser";
         String password = "testPassword";
         String email = "test@test.com";
@@ -240,25 +240,7 @@ public class ServerFacadeTests {
             throw new RuntimeException(e);
         }
     }
-//    @Test
-//    public void testCreateGameFail() throws ResponseException {
-//        String username = "testUser";
-//        String password = "testPassword";
-//        String email = "test@test.com";
-//
-//
-//        try {
-//            UserData userData = new UserData(username, password, email);
-//            AuthData authData = serverFacade.register(userData);
-//            Assertions.assertNotNull(authData);
-//            serverFacade.createGame("Wrong Token", "testGame1");
-//            Assertions.fail("Expected exception");
-//        } catch (ResponseException e) {
-//            Assertions.assertEquals(401, e.statusCode());
-//        } catch (URISyntaxException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+
 
         @Test
     public void joinGamePass() throws ResponseException {
