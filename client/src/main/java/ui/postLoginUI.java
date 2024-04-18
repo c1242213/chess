@@ -89,7 +89,7 @@ public class postLoginUI {
     }
 
     private static void joinGame(Scanner scanner, AuthData authData, ServerFacade server) throws ResponseException, URISyntaxException {
-        gameplayUI gameplayui = null;
+        gameplayUI gameplayui = new gameplayUI("name");
         try {
             System.out.println("Enter Game ID: ");
             String gameID = scanner.next();
@@ -99,7 +99,7 @@ public class postLoginUI {
             System.out.println("2. Black");
             System.out.println("3. Observe");
             String color = scanner.next();
-
+            System.out.print(gameplayui.getAuthToken());
             int id = Integer.parseInt(gameID);
             if (Objects.equals(color, "1")) {
                 server.joinGame(authData.getAuthToken(), id, "White");

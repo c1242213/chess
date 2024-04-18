@@ -1,15 +1,34 @@
-//package ui;
-//
-//import chess.*;
-//import DataAccess.DataAccessException;
-//import exception.ResponseException;
-//import org.eclipse.jetty.websocket.api.Session;
-//import webSocket.NotificationHandler;
-//import webSocket.WebSocketFacade;
-//import webSocketMessages.serverMessages.ServerMessage;
-//import java.util.Scanner;
-//
-//public class gameplayUI implements NotificationHandler {
+
+
+
+
+
+package ui;
+
+import chess.*;
+import DataAccess.DataAccessException;
+import exception.ResponseException;
+import org.eclipse.jetty.websocket.api.Session;
+import webSocket.NotificationHandler;
+import webSocket.WebSocketFacade;
+import webSocketMessages.serverMessages.ServerMessage;
+import java.util.Scanner;
+
+public class gameplayUI implements NotificationHandler {
+    String authToken;
+ gameplayUI(String usename) {
+     this.authToken = usename;
+ }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    @Override
+    public void notify(ServerMessage notification) {
+        System.out.println("p");
+    }
+}
 //    ChessGame.TeamColor team;
 //    ChessGame game;
 //    ChessBoard board;
