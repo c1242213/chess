@@ -3,14 +3,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 public class Pawn {
 
-    private final ChessGame.TeamColor color;
+    private final ChessGame.TeamColor playerColor;
 
     public Pawn(ChessGame.TeamColor pieceColor) {
-        this.color = pieceColor;
+        this.playerColor = pieceColor;
     }
 
 
-    public Collection<ChessMove> PawnMoves(ChessBoard board, ChessPosition myPosition) {
+    public Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> returnList = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -18,7 +18,7 @@ public class Pawn {
         int startRow;
         int promotionRow;
 
-        if (this.color == ChessGame.TeamColor.WHITE) {
+        if (this.playerColor == ChessGame.TeamColor.WHITE) {
             direction = 1;//White pawns
             startRow = 2;
             promotionRow = 8;
@@ -37,8 +37,8 @@ public class Pawn {
         }
 
         // each option for capturing a piece diagnolly
-        CaptureMove(board, myPosition, row + direction, col - 1, returnList, promotionRow);
-        CaptureMove(board, myPosition, row + direction, col + 1, returnList, promotionRow);
+        captureMove(board, myPosition, row + direction, col - 1, returnList, promotionRow);
+        captureMove(board, myPosition, row + direction, col + 1, returnList, promotionRow);
 
         return returnList;
     }
@@ -54,11 +54,11 @@ public class Pawn {
         }
     }
 
-    private void CaptureMove(ChessBoard board, ChessPosition fromPosition, int row, int col, Collection<ChessMove> moves, int promotionRow) {
+    private void captureMove(ChessBoard board, ChessPosition fromPosition, int row, int col, Collection<ChessMove> moves, int promotionRow) {
         if (ChessPiece.inTheBounds(row, col)){
             ChessPosition toPosition = new ChessPosition(row, col);
             ChessPiece pieceAtDestination = board.getPiece(toPosition);
-            if (pieceAtDestination != null && pieceAtDestination.getTeamColor() != this.color) {
+            if (pieceAtDestination != null && pieceAtDestination.getTeamColor() != this.playerColor) {
                 if (row == promotionRow) {
                     promotionMoves(fromPosition, toPosition, moves);
                 } else {

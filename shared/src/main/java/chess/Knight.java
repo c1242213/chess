@@ -5,14 +5,14 @@ import java.util.Collection;
 
 public class Knight {
 
-    private final ChessGame.TeamColor color;
+    private final ChessGame.TeamColor playerColor;
 
     public Knight(ChessGame.TeamColor pieceColor) {
-        this.color = pieceColor;
+        this.playerColor = pieceColor;
     }
 
 
-    public Collection<ChessMove> KnightMoves(ChessBoard board, ChessPosition myPosition) {
+    public Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> returnList = new ArrayList<>();
         int[][] moves = {
                 {2, 1}, {1, 2},
@@ -21,7 +21,7 @@ public class Knight {
                 {1, -2}, {2, -1}
         };
 
-        ChessPiece.specMove(color, board, myPosition, returnList, moves);
+        ChessPiece.specMove(playerColor, board, myPosition, returnList, moves);
         return returnList;
 
     }

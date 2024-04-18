@@ -52,35 +52,35 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> all_moves = null;
+        Collection<ChessMove> allMoves = null;
         switch (this.type) {
             case BISHOP:
                 Bishop bishop = new Bishop(this.pieceColor);
-                all_moves = bishop.B_Moves(board, myPosition, this);
+                allMoves = bishop.bishopMove(board, myPosition, this);
                 break;
             //Bishop.B_moves
             case KING:
                 King king = new King(this.pieceColor);
-                all_moves = king.KingMoves(board, myPosition);
+                allMoves = king.kingMoves(board, myPosition);
                 break;
             case KNIGHT:
                 Knight knight = new Knight(this.pieceColor);
-                all_moves = knight.KnightMoves(board, myPosition);
+                allMoves = knight.knightMoves(board, myPosition);
                 break;
             case QUEEN:
                 Queen queen = new Queen(this.pieceColor);
-                all_moves = queen.QueenMoves(board,myPosition, this);
+                allMoves = queen.queenMoves(board,myPosition, this);
                 break;
             case ROOK:
                 Rook rook = new Rook(this.pieceColor);
-                all_moves = rook.RookMoves(board,myPosition,this);
+                allMoves = rook.rookMoves(board,myPosition,this);
                 break;
             case PAWN:
                 Pawn pawn = new Pawn(this.pieceColor);
-                all_moves = pawn.PawnMoves(board,myPosition);
+                allMoves = pawn.pawnMoves(board,myPosition);
                 break;
         }
-        return all_moves;
+        return allMoves;
     }
 
     @Override

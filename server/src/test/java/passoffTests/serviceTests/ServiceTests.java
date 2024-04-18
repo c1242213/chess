@@ -42,7 +42,7 @@ public class ServiceTests {
             service.register(userData);
             Assertions.fail("Expected exception");
         } catch (ResponseException e) {
-            Assertions.assertEquals(400, e.StatusCode());
+            Assertions.assertEquals(400, e.statusCode());
         }
     }
 
@@ -66,7 +66,7 @@ public class ServiceTests {
             service.register(userData);
             Assertions.fail("Expected exception");
         } catch (ResponseException e) {
-            Assertions.assertEquals(400, e.StatusCode());
+            Assertions.assertEquals(400, e.statusCode());
         }
     }
 
@@ -90,7 +90,7 @@ public class ServiceTests {
             service.logout(authToken);
             Assertions.fail("Expected exception");
         } catch (ResponseException e) {
-            Assertions.assertEquals(401, e.StatusCode());
+            Assertions.assertEquals(401, e.statusCode());
         }
     }
 
@@ -118,7 +118,7 @@ public class ServiceTests {
             Collection<GameData> games = service.listGames(null);
             Assertions.fail("Expected exception");
         } catch (ResponseException e) {
-            Assertions.assertEquals(400, e.StatusCode());
+            Assertions.assertEquals(400, e.statusCode());
         }
     }
 
@@ -144,7 +144,7 @@ public class ServiceTests {
             int gameData = service.createGame(authToken, null);
             Assertions.fail("Expected exception");
         } catch (ResponseException e) {
-            Assertions.assertEquals(400, e.StatusCode());
+            Assertions.assertEquals(400, e.statusCode());
         }
     }
 
@@ -177,7 +177,7 @@ public class ServiceTests {
             service.joinGame(color, gameID, authToken);
             Assertions.fail("Expected exception");
         } catch (ResponseException e) {
-            Assertions.assertEquals(400, e.StatusCode());
+            Assertions.assertEquals(400, e.statusCode());
         }
     }
 

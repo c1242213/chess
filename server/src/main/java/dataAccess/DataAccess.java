@@ -18,5 +18,4 @@ public interface DataAccess {
     void joinGame(String clientColor, int gameID, String authToken) throws ResponseException;
     void clear() throws ResponseException;
 
-//    GameData getGame(int gameID) throws DataAccessException;
 }

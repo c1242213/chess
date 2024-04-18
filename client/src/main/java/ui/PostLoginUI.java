@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class postLoginUI {
+public class PostLoginUI {
 //    private ServerFacade server;
 //    public postLoginUI(){
 //        this.server = new ServerFacade(String serverURL)
@@ -45,7 +45,7 @@ public class postLoginUI {
                 break;
             case "5":
                 logout(server, authData);
-                preLoginUI.preLoginMenu();
+                PreLoginUI.preLoginMenu();
                 break;
             case "6":
                 quit(authData, server);
@@ -89,7 +89,7 @@ public class postLoginUI {
     }
 
     private static void joinGame(Scanner scanner, AuthData authData, ServerFacade server) throws ResponseException, URISyntaxException {
-        gameplayUI gameplayui = new gameplayUI("name");
+        GameplayUI gameplayui = new GameplayUI("name");
         try {
             System.out.println("Enter Game ID: ");
             String gameID = scanner.next();

@@ -41,30 +41,4 @@ public class WebSocketFacade extends Endpoint{
         }
     }
 
-    private void makeTheCommand(String authtoken, int gameID, UserGameCommand.CommandType type, ChessGame.TeamColor color, ChessMove move) throws DataAccessException {
-        try {
-            var action = new UserGameCommand(type, gameID, authtoken, move, color);
-            this.session.getBasicRemote().sendText(new Gson().toJson(action));
-        } catch (IOException ex) {
-            throw new DataAccessException(ex.getMessage());
-        }
-    }
-    public void joinPlayer(String authToken, Integer gameID, String username, ChessGame.TeamColor playerColor) throws DataAccessException {
-        makeTheCommand(authToken, gameID, UserGameCommand.CommandType.JOIN_PLAYER, playerColor, null);
-    }
-    public void joinObserver(String authToken, Integer gameID, String username) throws DataAccessException {
-        makeTheCommand(authToken, gameID, UserGameCommand.CommandType.JOIN_OBSERVER, null, null);
-
-    }
-    public void makeMove(String authToken, Integer gameID, ChessMove move, ChessGame game, ChessGame.TeamColor color) throws DataAccessException {
-        makeTheCommand(authToken, gameID, UserGameCommand.CommandType.MAKE_MOVE, null, move);
-
-    }
-    public void leaveGame(String authToken, Integer gameID) throws DataAccessException {
-        makeTheCommand(authToken, gameID, UserGameCommand.CommandType.LEAVE, null, null);
-
-    }
-    public void resign(String authToken, int gameID) throws  DataAccessException {
-        makeTheCommand(authToken, gameID, UserGameCommand.CommandType.RESIGN, null, null);
-    }
 }

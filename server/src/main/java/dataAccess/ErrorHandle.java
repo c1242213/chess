@@ -15,7 +15,7 @@ public class ErrorHandle {
         // Check if the exception is an instance of ResponseException to handle custom exceptions
         if (e instanceof ResponseException) {
             ResponseException re = (ResponseException) e;
-            res.status(re.StatusCode()); // Set the specific status code from the exception
+            res.status(re.statusCode()); // Set the specific status code from the exception
             errorResponse.put("message", re.getMessage());
         } else {
             // For general exceptions, set a 500 status code

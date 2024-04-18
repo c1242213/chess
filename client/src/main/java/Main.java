@@ -1,12 +1,12 @@
 
 import exception.ResponseException;
-import ui.preLoginUI;
+import ui.PreLoginUI;
 
 public class Main {
     public static void main(String[] args) throws ResponseException {
 
         var serverUrl = "http://localhost:8080";
-        preLoginUI preLogin = new preLoginUI(serverUrl);
+        PreLoginUI preLogin = new PreLoginUI(serverUrl);
         preLogin.preLoginMenu();
     }
 

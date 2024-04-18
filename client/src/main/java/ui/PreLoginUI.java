@@ -7,20 +7,21 @@ import model.UserData;
 import java.net.URISyntaxException;
 import java.util.Scanner;
 
-public class preLoginUI {
+public class PreLoginUI {
     private static boolean logIn = false;
     private static ServerFacade server;
     private static AuthData authData;
 
 
 
-    public preLoginUI(String serverUrl) {
+    public PreLoginUI(String serverUrl) {
             server = new ServerFacade(serverUrl);
     }
 
 
 
     public static void printPreLogin() {
+
         System.out.println();
         System.out.println("1. Register");
         System.out.println("2. Login");
@@ -64,7 +65,7 @@ public class preLoginUI {
 
             authData = server.register(user);
             logIn = true;
-            postLoginUI.postLoginMenu(authData, server);
+            PostLoginUI.postLoginMenu(authData, server);
 
         }
         catch(ResponseException e){
@@ -84,7 +85,7 @@ public class preLoginUI {
             UserData user = new UserData(username, password, null);
             authData = server.login(user);
             logIn = true;
-            postLoginUI.postLoginMenu(authData, server);
+            PostLoginUI.postLoginMenu(authData, server);
 
         } catch(ResponseException e){
             System.out.println(e.getMessage());
