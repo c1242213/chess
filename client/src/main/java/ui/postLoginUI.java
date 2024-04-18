@@ -9,8 +9,10 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class postLoginUI {
-
-
+//    private ServerFacade server;
+//    public postLoginUI(){
+//        this.server = new ServerFacade(String serverURL)
+//    }
     public static void printPostLogin() {
         System.out.println();
         System.out.println("1. Create Game");
@@ -87,7 +89,7 @@ public class postLoginUI {
     }
 
     private static void joinGame(Scanner scanner, AuthData authData, ServerFacade server) throws ResponseException, URISyntaxException {
-
+        gameplayUI gameplayui = null;
         try {
             System.out.println("Enter Game ID: ");
             String gameID = scanner.next();

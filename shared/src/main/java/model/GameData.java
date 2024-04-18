@@ -28,11 +28,11 @@ public class GameData {
         return gameID;
     }
 
-    public static String getWhiteUsername() {
+    public  String getWhiteUsername() {
         return whiteUsername;
     }
 
-    public static String getBlackUsername() {
+    public  String getBlackUsername() {
         return blackUsername;
     }
 
@@ -42,7 +42,7 @@ public class GameData {
 
 
 
-    public static ChessGame getGame(){return game;}
+    public ChessGame getGame(){return game;}
 
     public void setGameID(int gameID) {
         this.gameID = gameID;

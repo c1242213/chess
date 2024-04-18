@@ -6,6 +6,7 @@ import model.ListGameData;
 import model.UserData;
 import model.GameData;
 //import server.websocket.WebSocketHandler;
+import server.webSocket.WebSocketHandler;
 import service.Service;
 import spark.*;
 
@@ -29,6 +30,7 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+        Spark.webSocket("/connect", WebSocketHandler.class);
 
         // Register your endpoints and handle exceptions here.
 

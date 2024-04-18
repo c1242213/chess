@@ -4,6 +4,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
 import com.google.gson.Gson;
+import dataAccess.DataAccessException;
 import exception.ResponseException;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.*;
@@ -41,56 +42,31 @@ public class WebSocketFacade extends Endpoint{
             throw new RuntimeException(e);
         }
     }
-    public void joinPlayer(String authToken, Integer gameID, String username, ChessGame.TeamColor playerColor) {
+
+    private void makeTheCommand(String authtoken, int gameID, UserGameCommand.CommandType type, ChessGame.TeamColor color, ChessMove move) throws DataAccessException {
         try {
-            var command = new JoinPlayerCommand(authToken);
-            command.setGameID(gameID);
-            command.setUsername(username);
-            command.setPlayerColor(playerColor);
-            this.session.getBasicRemote().sendText(new Gson().toJson(command));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            var action = new UserGameCommand(type, gameID, authtoken, move, color);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException ex) {
+            throw new DataAccessException(ex.getMessage());
         }
     }
-    public void joinObserver(String authToken, Integer gameID, String username) {
-        try {
-            var command = new JoinObserverCommand(authToken);
-            command.setGameID(gameID);
-            command.setUsername(username);
-            this.session.getBasicRemote().sendText(new Gson().toJson(command));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void joinPlayer(String authToken, Integer gameID, String username, ChessGame.TeamColor playerColor) throws DataAccessException {
+        makeTheCommand(authToken, gameID, UserGameCommand.CommandType.JOIN_PLAYER, playerColor, null);
+    }
+    public void joinObserver(String authToken, Integer gameID, String username) throws DataAccessException {
+        makeTheCommand(authToken, gameID, UserGameCommand.CommandType.JOIN_OBSERVER, null, null);
 
     }
-    public void makeMove(String authToken, Integer gameID, ChessMove move, ChessGame game, ChessGame.TeamColor color) {
-        try {
-            var command = new MakeMoveCommand(authToken);
-            command.setGameID(gameID);
-            command.setMove(move);
-            this.session.getBasicRemote().sendText(new Gson().toJson(command));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void makeMove(String authToken, Integer gameID, ChessMove move, ChessGame game, ChessGame.TeamColor color) throws DataAccessException {
+        makeTheCommand(authToken, gameID, UserGameCommand.CommandType.MAKE_MOVE, null, move);
 
     }
-    public void leaveGame(String authToken, Integer gameID) {
-        try {
-            var command = new LeaveGameCommand(authToken);
-            command.setGameID(gameID);
-            this.session.getBasicRemote().sendText(new Gson().toJson(command));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void leaveGame(String authToken, Integer gameID) throws DataAccessException {
+        makeTheCommand(authToken, gameID, UserGameCommand.CommandType.LEAVE, null, null);
 
     }
-    public void resign(String authToken, int gameID) throws ResponseException {
-        try {
-            var command = new ResignCommand(authToken);
-            command.setGameID(gameID);
-            this.session.getBasicRemote().sendText(new Gson().toJson(command));
-        }catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void resign(String authToken, int gameID) throws  DataAccessException {
+        makeTheCommand(authToken, gameID, UserGameCommand.CommandType.RESIGN, null, null);
     }
 }

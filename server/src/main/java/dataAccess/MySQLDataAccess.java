@@ -50,6 +50,23 @@ public class MySQLDataAccess implements DataAccess {
         }
     }
 
+//    public String getUsernameFromAuth(String auth) throws SQLException, DataAccessException {
+//        try (Connection conn = DatabaseManager.getConnection()) {
+//            String sql = "SELECT username FROM authdata WHERE authToken = ?";
+//            PreparedStatement stmt = conn.prepareStatement(sql);
+//            ResultSet rs = stmt.executeQuery();
+//
+//            if  (rs.next()) {
+//               var user = rs.getString("username");
+//               return user;
+//            }
+//            else {
+//                throw new DataAccessException("Invalid authToken in DAO");
+//            }
+//        }
+//
+//    }
+
     public AuthData login(UserData userData) throws ResponseException {
 
         try {
@@ -222,8 +239,7 @@ public class MySQLDataAccess implements DataAccess {
     }
 
 
-
-    private UserData getUser(String username) throws SQLException, DataAccessException {
+    public UserData getUser(String username) throws SQLException, DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
             String sql = "SELECT * FROM userdata WHERE username = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -366,7 +382,56 @@ private AuthData createAuth(String username) throws SQLException, DataAccessExce
                 }
             }
         }
+
     }
+
+//    public void leavetheGame(String color, int gameID) throws SQLException, DataAccessException {
+//        if (color == null) {
+//            return;
+//        }
+//        try (Connection conn = DatabaseManager.getConnection()) {
+//            String sql = "SELECT * FROM gamedata WHERE gameId = ?";
+//            PreparedStatement stmt = conn.prepareStatement(sql);
+//            stmt.setInt(1, gameID);
+//            ResultSet rs = stmt.executeQuery();
+//            if (rs.next()) {
+//                if (color.equals("WHITE")) {
+//                    String sql2 = "UPDATE gamedata SET whiteUsername = ? WHERE gameId = ?";
+//                    PreparedStatement stmt2 = conn.prepareStatement(sql2);
+//                    stmt2.setString(1, null);
+//                    stmt2.setInt(2, gameID);
+//                    stmt2.executeUpdate();
+//                } else {
+//                    String sql2 = "UPDATE gamedata SET blackUsername = ? WHERE gameId = ?";
+//                    PreparedStatement stmt2 = conn.prepareStatement(sql2);
+//                    stmt2.setString(1, null);
+//                    stmt2.setInt(2, gameID);
+//                    stmt2.executeUpdate();
+//                }
+//            }
+//        }
+//
+//    }
+
+
+    public GameData getGameData(int gameID) {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            String sql = "SELECT * FROM gamedata WHERE game_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, gameID);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) { return new GameData( rs.getInt("game_id"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"),  convertJsonToChessGame(rs.getString("game")));
+            }
+            return null;
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+//    @Override
+//    public GameData getGame(int gameID) throws DataAccessException {
+//        return getGameData(gameID);
+//    }
+
     private void clearAllData() throws SQLException, DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
 

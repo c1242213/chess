@@ -19,19 +19,54 @@ public class ConnectionManager {
     public void remove(String visitorName) {
         connections.remove(visitorName);
     }
-    public void broadcast(String visitorName, ServerMessage notification) throws IOException {
+    public void broadcast(String excludeVisitorName, ServerMessage notification) throws IOException {
         Gson gson = new Gson();
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
-                if (c.visitorName.equals(visitorName)) {
-                    // do I need to turn this back to GSON??
-                    c.send(gson.toJson(notification));
-                }
-            } else {
-                removeList.add(c);
+
+                    if (!c.visitorName.equals(excludeVisitorName)) {
+                        c.send(gson.toJson(notification));
+                    } else {
+                        removeList.add(c);
+                    }
+//                } else {
+//                    if (c.visitorName.equals(visitorName)) {
+//                        c.send(gson.toJson(notification));
+//                    } else {
+//                        removeList.add(c);
+//                    }
+
+
             }
         }
+        // Clean up any connections that were left open.
+        for (var c : removeList) {
+            connections.remove(c.visitorName);
+        }
+    }
+
+    public void broadcastToMe(String VisitorName, ServerMessage notification) throws IOException {
+        Gson gson = new Gson();
+        var removeList = new ArrayList<Connection>();
+        for (var c : connections.values()) {
+            if (c.session.isOpen()) {
+
+                    if (c.visitorName.equals(VisitorName)) {
+                        c.send(gson.toJson(notification));
+                    } else {
+                        removeList.add(c);
+                    }
+//                } else {
+//                    if (c.visitorName.equals(visitorName)) {
+//                        c.send(gson.toJson(notification));
+//                    } else {
+//                        removeList.add(c);
+//                    }
+//                }
+
+                }
+            }
 
         // Clean up any connections that were left open.
         for (var c : removeList) {

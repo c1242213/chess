@@ -1,14 +1,17 @@
 package ui;
 
 import chess.*;
+import dataAccess.DataAccessException;
 import exception.ResponseException;
 import org.eclipse.jetty.websocket.api.Session;
 import webSocket.NotificationHandler;
 import webSocket.WebSocketFacade;
-
+import webSocketMessages.serverMessages.ServerMessage;
 import java.util.Scanner;
 
-public class gameplayUI {
+import static webSocketMessages.serverMessages.ServerMessage.ServerMessageType.*;
+
+public class gameplayUI implements NotificationHandler {
     ChessGame.TeamColor team;
     ChessGame game;
     ChessBoard board;
@@ -24,7 +27,7 @@ public class gameplayUI {
         board = game.getBoard();
         board.resetBoard();
         authToken = auth;
-        webSocket = new WebSocketFacade(serverURL, (NotificationHandler) this);
+        webSocket = new WebSocketFacade(serverURL,  this);
         this.team = color;
     }
     public void GameplayUI(WebSocketFacade ws) {
@@ -50,7 +53,7 @@ public class gameplayUI {
         System.out.println("6. Resign");
     }
 
-    public void getcommands(Scanner scanner) {
+    public void getcommands(Scanner scanner) throws ResponseException {
         gameplayCommands();
         String input = scanner.next();
         switch(input) {
@@ -84,7 +87,7 @@ public class gameplayUI {
         String piece = scanner.next();
 
     }
-    private void makeMove(Scanner scanner){
+    private void makeMove(Scanner scanner) throws DataAccessException {
         System.out.println("Enter a piece to move (e6:e5): ");
         String move = scanner.next();
         String[] positions = move.split(":");
@@ -174,24 +177,42 @@ public class gameplayUI {
                     break;
                 }
             }
-        if (row == -1 || col == -1) {
-            System.out.println("Invalid range, please provide a position within the chessboard.");
-            return new ChessPosition(-1,-1);
-        }
-        return new ChessPosition(row, col);
-    }
-    catch (Exception e) {
-        System.out.println("Invalid format, please provide a format e6:f7.");
-        return new ChessPosition(-1, -1);
+            if (row == -1 || col == -1) {
+                System.out.println("Invalid range, please provide a position within the chessboard.");
+                return new ChessPosition(-1, -1);
+            }
+            return new ChessPosition(row, col);
+        } catch (Exception e) {
+            System.out.println("Invalid format, please provide a format e6:f7.");
+            return new ChessPosition(-1, -1);
 
+        }
     }
     private void redraw(){
-
+        ChessBoardUI chessBoard = new ChessBoardUI();
+        chessBoard.drawBoard();
     }
-    private void leave(){
-
+    private void leave() throws DataAccessException {
+        webSocket.leaveGame(authToken, gameID);
+//        postLoginUI.postLoginMenu();
     }
-    private void resign(){
-
+    private void resign() throws ResponseException, DataAccessException {
+        webSocket.resign(authToken, gameID);
+        preLoginUI.preLoginMenu(); //???
     }
+
+
+        @Override
+        public void notify(ServerMessage notification) {
+            ChessBoardUI chessboard = new ChessBoardUI();
+            //chessboard.printBoard(board, backwards(), null);
+            System.out.println("\n");
+            switch (notification.getServerMessageType()) {
+
+                case LOAD_GAME -> System.out.println("board");// print the board. idk how oyu do this
+                case ERROR -> System.out.println(notification.getErrorMessage());
+                case NOTIFICATION -> System.out.println(notification.getMessage());
+                default -> System.out.println("error: in notify");
+            }
+        }
 }
