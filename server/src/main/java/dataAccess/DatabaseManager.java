@@ -5,7 +5,6 @@ import java.util.Properties;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 import chess.ChessGame;
-import model.AuthData;
 
 public class DatabaseManager {
     private static final String databaseName;

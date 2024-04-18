@@ -4,7 +4,7 @@ package server.webSocket;
 import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
-import dataAccess.DataAccessException;
+import DataAccess.DataAccessException;
 import dataAccess.MySQLDataAccess;
 import exception.ResponseException;
 import model.GameData;
